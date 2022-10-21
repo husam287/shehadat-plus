@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -37,6 +37,7 @@ export default function ShehadaCard({
   interestRatio,
   endDate,
   colorTheme = COLORS.primary,
+  onClick = () => {},
 }) {
   function getPeriods() {
     const periods = [];
@@ -52,7 +53,7 @@ export default function ShehadaCard({
   const formatedTotalMoney = currencyFormat(totalMoney);
 
   return (
-    <View style={styles.shehadatBorder}>
+    <TouchableOpacity onPress={onClick} style={styles.shehadatBorder}>
       <View style={globalStyle.fullSize}>
         <View style={[globalStyle.row, styles.spaceBetween]}>
           <CustomText style={textColor}>
@@ -77,6 +78,6 @@ export default function ShehadaCard({
         </View>
       </View>
       <Ionicons name="chevron-forward" size={24} color={COLORS.secondary} />
-    </View>
+    </TouchableOpacity>
   );
 }

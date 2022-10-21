@@ -12,6 +12,7 @@ import ScreenWrapper from 'components/General/ScreenWrapper';
 import ButtonComponent from 'components/General/ButtonComponent';
 import ShehadaCard from 'components/HomeComponents/ShehadaCard';
 import CustomText from 'components/General/CustomText';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   justifyBetween: {
@@ -83,7 +84,12 @@ function TabBar({ data, selectedTab, setSelectedTab }) {
   );
 }
 export default function HomeScreen() {
+  const navigation = useNavigation();
   const [selectedTab, setSelectedTab] = useState('All');
+
+  const onClickOnShehadaHandler = (id) => {
+    navigation.navigate('shehadaDetails', { shehadaId: id });
+  };
 
   return (
     <ScreenWrapper customStyle={styles.zeroPadding}>
@@ -105,18 +111,21 @@ export default function HomeScreen() {
             endDate="2023-10-28"
             interestPeriod={1}
             interestRatio={18}
+            onClick={() => onClickOnShehadaHandler('2')}
           />
           <ShehadaCard
             totalMoney={200000}
             endDate="2023-10-28"
             interestPeriod={1}
             interestRatio={18}
+            onClick={() => onClickOnShehadaHandler('2')}
           />
           <ShehadaCard
             totalMoney={200000}
             endDate="2023-10-28"
             interestPeriod={1}
             interestRatio={18}
+            onClick={() => onClickOnShehadaHandler('2')}
           />
         </View>
       </ScrollView>

@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import BottomNavigator from 'routes/TabNavigator/BottomTabNavigator';
+import ShehadaDetails from 'screens/ShehadaDetails';
 import TestScreen from 'screens/TestScreen';
 import RouterOption from '../HeaderOptions/RouterOption';
 
@@ -21,6 +22,11 @@ export default function MainStack() {
           name="testScreen"
           component={TestScreen}
           options={({ navigation }) => RouterOption({ navigation, title: 'Test screen' })}
+        />
+        <Stack.Screen
+          name="shehadaDetails"
+          component={ShehadaDetails}
+          options={({ navigation }) => RouterOption({ navigation, title: 'Shehada Details' })}
         />
       </Stack.Group>
 
