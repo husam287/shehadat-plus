@@ -1,61 +1,125 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigation } from '@react-navigation/native';
-import * as YUP from 'yup';
+import React, { useState } from 'react';
+import {
+  FlatList, ScrollView, StyleSheet, TouchableOpacity, View,
+} from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
-import i18n from 'assets/i18n';
-import ScreenWrapper from 'components/ScreenWrapper';
-import ButtonComponent from 'components/ButtonComponent';
-import CustomText from 'components/CustomText';
-import ControllableInput from 'components/Inputs/ControllableInput';
+import Metrics from 'constants/Metrics';
+import globalStyle from 'constants/Styles';
 import COLORS from 'constants/Colors';
-// import { useFetch } from 'hooks/useFetch'
-// import { ProductEndpoints } from 'apis/endpoints/ProductEndpoints'
+import TotalAmountBlock from 'components/HomeComponents/TotalAmountBlock';
+import ScreenWrapper from 'components/General/ScreenWrapper';
+import ButtonComponent from 'components/General/ButtonComponent';
+import ShehadaCard from 'components/HomeComponents/ShehadaCard';
+import CustomText from 'components/General/CustomText';
 
 const styles = StyleSheet.create({
-  coloredBackground: {
-    backgroundColor: COLORS.secondary,
+  justifyBetween: {
+    justifyContent: 'space-between',
   },
-  spaceTop10: {
-    marginTop: 10,
+  labelStyle: {
+    color: COLORS.secondary,
+    fontSize: 14,
+    textTransform: 'capitalize',
+    ...globalStyle.font500,
+    textAlign: 'center',
+  },
+  screenPadding: {
+    padding: Metrics.screenWidth * 0.056,
+  },
+  spaceTop20: {
+    marginTop: 20,
+  },
+  tabStyle: {
+    height: 30,
+    paddingHorizontal: 20,
+    width: Metrics.screenWidth / 3.5,
+  },
+  zeroPadding: {
+    padding: 0,
   },
 });
 
-export default function HomeScreen() {
-  const navigation = useNavigation();
-  // const [{ loading, response }] = useFetch(ProductEndpoints.getCategories())
-  const schema = YUP.object().shape({
-    test: YUP.string().required(),
-  });
+function AddShehadaButton() {
+  return (
+    <ButtonComponent
+      IconCompoent={<AntDesign name="plus" size={24} color={COLORS.light} />}
+      backgroundColor={COLORS.green}
+    />
+  );
+}
 
-  const { control, handleSubmit } = useForm({
-    resolver: yupResolver(schema),
-  });
-
-  const onSubmit = (value) => {
-    console.log(value);
-    navigation.navigate('testScreen');
+function Tab({ title, isSelected, onClick = () => {} }) {
+  const colorStyle = { color: isSelected ? COLORS.primary : COLORS.secondary };
+  const activeBorder = {
+    borderBottomColor: COLORS.primary,
+    borderBottomWidth: isSelected ? 1 : 0,
   };
 
   return (
-    <ScreenWrapper>
-      <View style={styles.coloredBackground}>
-        <CustomText>{i18n.t('CFBundleDisplayName')}</CustomText>
-      </View>
+    <TouchableOpacity onPress={onClick} style={[styles.tabStyle, activeBorder]}>
+      <CustomText style={[styles.labelStyle, colorStyle]}>{title}</CustomText>
+    </TouchableOpacity>
+  );
+}
 
-      <ControllableInput
-        name="test"
-        control={control}
-        placeholderText="test"
+function TabBar({ data, selectedTab, setSelectedTab }) {
+  return (
+    <View>
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={data}
+        keyExtractor={(item, index) => `${index}`}
+        renderItem={({ item }) => (
+          <Tab
+            title={item}
+            isSelected={item === selectedTab}
+            onClick={() => setSelectedTab(item)}
+          />
+        )}
+      />
+    </View>
+  );
+}
+export default function HomeScreen() {
+  const [selectedTab, setSelectedTab] = useState('All');
+
+  return (
+    <ScreenWrapper customStyle={styles.zeroPadding}>
+      <TabBar
+        data={['All', 'Me', 'Sherif', 'Children']}
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
       />
 
-      <ButtonComponent
-        buttonCustomStyle={styles.spaceTop10}
-        title="Submit"
-        onPress={handleSubmit(onSubmit)}
-      />
+      <ScrollView style={styles.screenPadding}>
+        <View style={[globalStyle.row, styles.justifyBetween]}>
+          <TotalAmountBlock total={300000} />
+          <AddShehadaButton />
+        </View>
+
+        <View style={styles.spaceTop20}>
+          <ShehadaCard
+            totalMoney={200000}
+            endDate="2023-10-28"
+            interestPeriod={1}
+            interestRatio={18}
+          />
+          <ShehadaCard
+            totalMoney={200000}
+            endDate="2023-10-28"
+            interestPeriod={1}
+            interestRatio={18}
+          />
+          <ShehadaCard
+            totalMoney={200000}
+            endDate="2023-10-28"
+            interestPeriod={1}
+            interestRatio={18}
+          />
+        </View>
+      </ScrollView>
     </ScreenWrapper>
   );
 }

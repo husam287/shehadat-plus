@@ -11,7 +11,7 @@ import { login } from 'reducers/authReducer';
 import i18n from 'assets/i18n';
 import useCheckNewUpdates from 'hooks/useCheckNewUpdate';
 import COLORS from 'constants/Colors';
-import NotificationListnerContainer from 'components/NotificationListnerContainer';
+import NotificationListnerContainer from 'components/General/NotificationListnerContainer';
 import MainStack from './Stacks/MainStack';
 
 function Route() {

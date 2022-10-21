@@ -9,20 +9,15 @@ import {
 import globalStyle from 'constants/Styles';
 import COLORS from 'constants/Colors';
 import CustomText from './CustomText';
-import Icon from './Icon';
 
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     borderRadius: 10,
     flexDirection: 'row',
-    height: 50,
+    height: 40,
     justifyContent: 'center',
-  },
-  nextArrowPlace: {
-    end: 20,
-    position: 'absolute',
-    ...globalStyle.flipBasesOnLang,
+    paddingHorizontal: 15,
   },
   text: {
     textAlign: 'center',
@@ -38,7 +33,6 @@ export default function ButtonComponent({
   backgroundColor = COLORS.primary,
   borderColor,
   disabled = false,
-  hasArrow = false,
   fontSize = 14,
   buttonCustomStyle,
   IconCompoent,
@@ -61,20 +55,16 @@ export default function ButtonComponent({
         style={[styles.button, customStyle]}
       >
         {!isLoading ? (
-          <>
-            {IconCompoent && <IconCompoent />}
-            <CustomText style={[styles.text, { color, fontSize }]}>
-              {title}
-            </CustomText>
-            {hasArrow && (
-              <Icon
-                name="right-arrow"
-                size={30}
-                color="#fff"
-                style={styles.nextArrowPlace}
-              />
-            )}
-          </>
+          <View>
+            {IconCompoent || null}
+            {title
+              ? (
+                <CustomText style={[styles.text, { color, fontSize }]}>
+                  {title}
+                </CustomText>
+              )
+              : null}
+          </View>
         ) : (
           <ActivityIndicator color="#fff" size={24} />
         )}
