@@ -49,20 +49,20 @@ export default function ShehadaCard({
   }
 
   const interestCollectDates = getPeriods(endDate);
-  const textColor = { color: colorTheme };
+  const textColor = { color: colorTheme, fontSize: 16 };
   const formatedTotalMoney = currencyFormat(totalMoney);
 
   return (
     <TouchableOpacity onPress={onClick} style={styles.shehadatBorder}>
       <View style={globalStyle.fullSize}>
         <View style={[globalStyle.row, styles.spaceBetween]}>
-          <CustomText style={textColor}>
+          <CustomText style={[textColor, globalStyle.font500]}>
             {`${interestPeriod} Month`}
           </CustomText>
           <CustomText style={[textColor, globalStyle.font700]}>
             {`${formatedTotalMoney}`}
           </CustomText>
-          <CustomText style={textColor}>
+          <CustomText style={[textColor, globalStyle.font500]}>
             {`${interestRatio}%`}
           </CustomText>
         </View>

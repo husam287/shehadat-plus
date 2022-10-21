@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import CustomText from 'components/General/CustomText';
 import globalStyle from 'constants/Styles';
 import COLORS from 'constants/Colors';
+import useShadow from 'hooks/useShadow';
 
 const styles = StyleSheet.create({
   headerStyle: {
@@ -24,8 +25,9 @@ const styles = StyleSheet.create({
 });
 
 function HeaderComponent({ navigation, title, hasBackArrow }) {
+  const shadowStyle = useShadow();
   return (
-    <View style={styles.headerStyle}>
+    <View style={[styles.headerStyle, shadowStyle()]}>
       {hasBackArrow && navigation?.canGoBack() && (
       <TouchableOpacity
         style={styles.spacing}

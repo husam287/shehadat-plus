@@ -7,7 +7,7 @@ import Icon from 'components/General/Icon';
 import COLORS from 'constants/Colors';
 
 function TapbarComponent({
-  isFocused, title, tabWidth, iconName,
+  isFocused, title, tabWidth, iconName, iconComponent,
 }) {
   const containerStyle = {
     alignItems: 'center',
@@ -23,12 +23,14 @@ function TapbarComponent({
 
   return (
     <View style={containerStyle}>
+      {iconComponent || (
       <Icon
         name={iconName}
         size={24}
         color={isFocused ? COLORS.primary : COLORS.grey}
       />
-      <CustomText style={[textStyle, globalStyle.font500]}>{title}</CustomText>
+      )}
+      {title ? <CustomText style={[textStyle, globalStyle.font500]}>{title}</CustomText> : null}
     </View>
   );
 }

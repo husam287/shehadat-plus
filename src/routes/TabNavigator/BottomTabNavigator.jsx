@@ -1,10 +1,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { AntDesign } from '@expo/vector-icons';
 
 import Metrics from 'constants/Metrics';
 import HomeScreen from 'screens/HomeScreen';
 import CalenderScreen from 'screens/CalenderScreen';
 import ProfileScreen from 'screens/ProfileScreen';
+import COLORS from 'constants/Colors';
 import RouterOption from '../HeaderOptions/RouterOption';
 import TapbarComponent from '../HeaderOptions/TapbarComponent';
 
@@ -13,8 +15,9 @@ const TABWIDTH = Metrics.screenWidth / 3;
 function HomeTabBarElement({ focused }) {
   return (
     <TapbarComponent
-      title=""
-      iconName="home"
+      iconComponent={
+        <AntDesign name="home" size={24} color={focused ? COLORS.primary : COLORS.secondary} />
+      }
       isFocused={focused}
       tabWidth={TABWIDTH}
     />
@@ -24,8 +27,9 @@ function HomeTabBarElement({ focused }) {
 function CalenderTabBarElement({ focused }) {
   return (
     <TapbarComponent
-      title=""
-      iconName="date"
+      iconComponent={
+        <AntDesign name="calendar" size={24} color={focused ? COLORS.primary : COLORS.secondary} />
+      }
       isFocused={focused}
       tabWidth={TABWIDTH}
     />
@@ -35,8 +39,9 @@ function CalenderTabBarElement({ focused }) {
 function ProfileTabBarElement({ focused }) {
   return (
     <TapbarComponent
-      title=""
-      iconName="user"
+      iconComponent={
+        <AntDesign name="user" size={24} color={focused ? COLORS.primary : COLORS.secondary} />
+      }
       isFocused={focused}
       tabWidth={TABWIDTH}
     />

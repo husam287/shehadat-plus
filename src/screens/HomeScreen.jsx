@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 function AddShehadaButton() {
   return (
     <ButtonComponent
-      IconCompoent={<AntDesign name="plus" size={24} color={COLORS.light} />}
+      IconCompoent={<AntDesign name="plus" size={21} color={COLORS.light} />}
       backgroundColor={COLORS.green}
     />
   );
@@ -66,7 +66,7 @@ function Tab({ title, isSelected, onClick = () => {} }) {
 
 function TabBar({ data, selectedTab, setSelectedTab }) {
   return (
-    <View>
+    <View style={styles.spaceTop20}>
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
