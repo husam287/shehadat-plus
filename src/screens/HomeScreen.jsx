@@ -42,10 +42,12 @@ const styles = StyleSheet.create({
 });
 
 function AddShehadaButton() {
+  const navigation = useNavigation();
   return (
     <ButtonComponent
       IconCompoent={<AntDesign name="plus" size={21} color={COLORS.light} />}
       backgroundColor={COLORS.green}
+      onPress={() => navigation.navigate('addShehada')}
     />
   );
 }

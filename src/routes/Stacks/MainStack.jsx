@@ -1,11 +1,12 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import React from 'react';
 import BottomNavigator from 'routes/TabNavigator/BottomTabNavigator';
+import AddShehadaScreen from 'screens/AddShehadaScreen';
 import ShehadaDetails from 'screens/ShehadaDetails';
 import TestScreen from 'screens/TestScreen';
 import RouterOption from '../HeaderOptions/RouterOption';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 export default function MainStack() {
   return (
@@ -17,7 +18,6 @@ export default function MainStack() {
           component={BottomNavigator}
           options={({ navigation }) => RouterOption({ navigation })}
         />
-
         <Stack.Screen
           name="testScreen"
           component={TestScreen}
@@ -27,6 +27,14 @@ export default function MainStack() {
           name="shehadaDetails"
           component={ShehadaDetails}
           options={({ navigation }) => RouterOption({ navigation, title: 'Shehada Details' })}
+        />
+        <Stack.Screen
+          name="addShehada"
+          component={AddShehadaScreen}
+          options={({ navigation }) => ({
+            ...RouterOption({ navigation, title: 'Add New Shehada', isModal: true }),
+            ...TransitionPresets.ModalSlideFromBottomIOS,
+          })}
         />
       </Stack.Group>
 

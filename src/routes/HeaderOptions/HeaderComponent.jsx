@@ -21,14 +21,18 @@ const styles = StyleSheet.create({
     fontSize: 22,
     ...globalStyle.font500,
   },
+  justifyBetween: { justifyContent: 'space-between' },
   spacing: { padding: 5 },
 });
 
-function HeaderComponent({ navigation, title, hasBackArrow }) {
+function HeaderComponent({
+  navigation, title, hasBackArrow, isModal,
+}) {
   const shadowStyle = useShadow();
+
   return (
-    <View style={[styles.headerStyle, shadowStyle()]}>
-      {hasBackArrow && navigation?.canGoBack() && (
+    <View style={[styles.headerStyle, shadowStyle(), isModal && styles.justifyBetween]}>
+      {hasBackArrow && navigation?.canGoBack() && !isModal && (
       <TouchableOpacity
         style={styles.spacing}
         onPress={() => navigation.goBack()}
@@ -40,6 +44,15 @@ function HeaderComponent({ navigation, title, hasBackArrow }) {
       <View>
         <CustomText style={styles.headerTitle}>{title}</CustomText>
       </View>
+
+      {hasBackArrow && navigation?.canGoBack() && isModal && (
+      <TouchableOpacity
+        style={styles.spacing}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons name="close" size={24} color={COLORS.primary} />
+      </TouchableOpacity>
+      )}
     </View>
   );
 }

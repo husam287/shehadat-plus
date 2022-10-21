@@ -1,7 +1,9 @@
 import React from 'react';
 import HeaderComponent from './HeaderComponent';
 
-export default function RouterOption({ navigation, title, tabBarIcon }) {
+export default function RouterOption({
+  navigation, title, tabBarIcon, isModal,
+}) {
   return {
     title,
     header: () => (
@@ -9,6 +11,7 @@ export default function RouterOption({ navigation, title, tabBarIcon }) {
         title={title}
         navigation={navigation}
         hasBackArrow={navigation?.canGoBack && !tabBarIcon}
+        isModal={isModal}
       />
     ),
     tabBarIcon,
