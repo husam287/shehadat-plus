@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Metrics from 'constants/Metrics';
 import HomeScreen from 'screens/HomeScreen';
-import CoursesScreen from 'screens/CoursesScreen';
+import CalenderScreen from 'screens/CalenderScreen';
 import ProfileScreen from 'screens/ProfileScreen';
 import RouterOption from '../HeaderOptions/RouterOption';
 import TapbarComponent from '../HeaderOptions/TapbarComponent';
@@ -13,8 +13,19 @@ const TABWIDTH = Metrics.screenWidth / 3;
 function HomeTabBarElement({ focused }) {
   return (
     <TapbarComponent
-      title="Home"
+      title=""
       iconName="home"
+      isFocused={focused}
+      tabWidth={TABWIDTH}
+    />
+  );
+}
+
+function CalenderTabBarElement({ focused }) {
+  return (
+    <TapbarComponent
+      title=""
+      iconName="date"
       isFocused={focused}
       tabWidth={TABWIDTH}
     />
@@ -24,19 +35,8 @@ function HomeTabBarElement({ focused }) {
 function ProfileTabBarElement({ focused }) {
   return (
     <TapbarComponent
-      title="Profile"
+      title=""
       iconName="user"
-      isFocused={focused}
-      tabWidth={TABWIDTH}
-    />
-  );
-}
-
-function CoursesTabBarElement({ focused }) {
-  return (
-    <TapbarComponent
-      title="Courses"
-      iconName="heart_outline"
       isFocused={focused}
       tabWidth={TABWIDTH}
     />
@@ -72,10 +72,10 @@ export default function BottomNavigator() {
         name="Profile"
         options={({ navigation }) => RouterOption({
           navigation,
-          title: 'Profile',
-          tabBarIcon: ProfileTabBarElement,
+          title: 'Calender',
+          tabBarIcon: CalenderTabBarElement,
         })}
-        component={ProfileScreen}
+        component={CalenderScreen}
       />
 
       {/* Courses */}
@@ -84,9 +84,9 @@ export default function BottomNavigator() {
         options={({ navigation }) => RouterOption({
           navigation,
           title: 'Courses',
-          tabBarIcon: CoursesTabBarElement,
+          tabBarIcon: ProfileTabBarElement,
         })}
-        component={CoursesScreen}
+        component={ProfileScreen}
       />
     </BottomTab.Navigator>
   );
