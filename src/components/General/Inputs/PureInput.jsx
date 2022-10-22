@@ -16,12 +16,12 @@ import CustomText from '../CustomText';
 
 const styles = StyleSheet.create({
   errorBorder: {
-    borderColor: COLORS.errorRedColor,
+    borderColor: COLORS.danger,
     borderWidth: 1,
   },
   errorText: {
     ...globalStyle.font400,
-    color: COLORS.errorRedColor,
+    color: COLORS.danger,
     fontSize: 12,
   },
   hintText: {
@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
   },
   input: {
     color: COLORS.primary,
+    flex: 1,
     fontSize: 14,
     textAlign: I18nManager.isRTL ? 'right' : 'left',
     textAlignVertical: 'center',
@@ -43,8 +44,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: 'row',
     height: 50,
-    marginTop: 23,
     paddingHorizontal: 15,
+  },
+  labelText: {
+    color: COLORS.dark,
+    ...globalStyle.font500,
+  },
+  mainContainer: {
+    marginHorizontal: 5,
+    marginTop: 23,
   },
   showPasswordIcon: {
     elevation: 20,
@@ -73,7 +81,9 @@ export default function PureInput({
   maxLength,
   textArea,
   customInputStyle,
+  style,
   hintText,
+  label,
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const hasErrors = Boolean(error);
@@ -141,7 +151,8 @@ export default function PureInput({
   const placeholderTextColorValue = placeholderTextColor || COLORS.grey;
 
   return (
-    <>
+    <View style={[styles.mainContainer, style]}>
+      {label ? <CustomText style={styles.labelText}>{label}</CustomText> : null}
       <View pointerEvents={pointerEventValue} style={inputContainerStyles}>
         {prefix || null}
 
@@ -172,6 +183,6 @@ export default function PureInput({
       </View>
 
       {ErrorSectionMarkup}
-    </>
+    </View>
   );
 }

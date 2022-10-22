@@ -18,7 +18,9 @@ export default function ControllableInput({
   maxLength,
   textArea,
   customInputStyle,
+  style,
   hintText,
+  label,
 }) {
   return (
     <Controller
@@ -26,6 +28,8 @@ export default function ControllableInput({
       name={name}
       render={({ field: { onChange, onBlur, value }, fieldState }) => (
         <PureInput
+          label={label}
+          style={style}
           onChange={onChange}
           onBlur={onBlur}
           value={value}
