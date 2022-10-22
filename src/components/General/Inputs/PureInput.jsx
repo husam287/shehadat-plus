@@ -79,6 +79,7 @@ export default function PureInput({
   keyboard = 'default',
   autoCompleteType,
   maxLength,
+  customColor,
   textArea,
   customInputStyle,
   style,
@@ -145,7 +146,7 @@ export default function PureInput({
   const inputStyles = [
     styles.input,
     customInputStyle && { ...customInputStyle },
-    !editable && { color: COLORS.darkGrey }, // override color when disabled
+    !editable && { color: customColor || COLORS.secondary }, // override color when disabled
   ];
 
   const placeholderTextColorValue = placeholderTextColor || COLORS.grey;

@@ -8,6 +8,8 @@ import { Controller, useForm } from 'react-hook-form';
 import ButtonComponent from 'components/General/ButtonComponent';
 import ControllableInput from 'components/General/Inputs/ControllableInput';
 import NormalSelectionModal from 'components/General/Inputs/NormalSelectionModal';
+import DateSelectionInput from 'components/General/Inputs/DateSelectionInput';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   marginTop0: {
@@ -26,10 +28,12 @@ export default function AddShehadaScreen() {
     money: YUP.string().required(),
     profit: YUP.string().required(),
     type: YUP.object().required(),
-    owner: YUP.string().required(),
+    owner: YUP.object().required(),
     startDate: YUP.string().required(),
     endDate: YUP.string().required(),
   });
+
+  const navigation = useNavigation();
 
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(schema),
@@ -37,6 +41,7 @@ export default function AddShehadaScreen() {
 
   const onAddShehadaHandler = (values) => {
     console.log(values);
+    navigation.goBack();
   };
 
   return (
@@ -47,6 +52,7 @@ export default function AddShehadaScreen() {
             style={styles.marginTop0}
             label="Money"
             name="money"
+            keyboard="number-pad"
             control={control}
             placeholderText="Ex: 10000"
           />
@@ -55,6 +61,7 @@ export default function AddShehadaScreen() {
             style={styles.marginTop0}
             label="Profit in %"
             name="profit"
+            keyboard="number-pad"
             control={control}
             placeholderText="Ex: 18"
           />
@@ -93,20 +100,36 @@ export default function AddShehadaScreen() {
             )}
           />
 
-          <ControllableInput
-            style={styles.marginTop0}
-            label="Start Date"
-            name="startDate"
+          <Controller
             control={control}
-            placeholderText="Start date"
+            name="startDate"
+            render={({ field: { onChange, onBlur, value }, fieldState }) => (
+              <DateSelectionInput
+                style={styles.marginTop0}
+                label="Start Date"
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                error={fieldState.error?.message}
+                placeholderText="Start date"
+              />
+            )}
           />
 
-          <ControllableInput
-            style={styles.marginTop0}
-            label="End Date"
-            name="endDate"
+          <Controller
             control={control}
-            placeholderText="End date"
+            name="endDate"
+            render={({ field: { onChange, onBlur, value }, fieldState }) => (
+              <DateSelectionInput
+                style={styles.marginTop0}
+                label="End Date"
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                error={fieldState.error?.message}
+                placeholderText="End date"
+              />
+            )}
           />
         </View>
       </ScrollView>

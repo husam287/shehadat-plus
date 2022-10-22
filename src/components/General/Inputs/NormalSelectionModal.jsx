@@ -14,7 +14,7 @@ import PureInput from './PureInput';
 
 const styles = StyleSheet.create({
   countryText: {
-    color: COLORS.mainColor,
+    color: COLORS.primary,
     fontSize: 18,
     ...globalStyle.font400,
     marginStart: 10,
@@ -92,7 +92,7 @@ function NormalSelectionModal({
         <PureInput
           editable={false}
           label={label}
-          customColor={COLORS.text}
+          customColor={COLORS.primary}
           placeholderText={placeholderText}
           onBlur={onBlur}
           error={error}
