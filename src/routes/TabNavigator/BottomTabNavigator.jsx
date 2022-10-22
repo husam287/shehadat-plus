@@ -83,12 +83,12 @@ export default function BottomNavigator() {
         component={CalenderScreen}
       />
 
-      {/* Courses */}
+      {/* PROFILE */}
       <BottomTab.Screen
-        name="Courses"
+        name="profile"
         options={({ navigation }) => RouterOption({
           navigation,
-          title: 'Courses',
+          title: 'Profile',
           tabBarIcon: ProfileTabBarElement,
         })}
         component={ProfileScreen}
