@@ -2,15 +2,13 @@ import {
   StyleSheet, TouchableOpacity, View,
 } from 'react-native';
 import React, { useState } from 'react';
-import globalStyle from 'constants/Styles';
 import ReactNativeModal from 'react-native-modal';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import COLORS from 'constants/Colors';
-import { Calendar } from 'react-native-calendars';
 import PureInput from './PureInput';
-import Icon from '../Icon';
 import ButtonComponent from '../ButtonComponent';
+import CustomCalender, { SelectedDateStyle } from '../CustomCalender';
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -19,23 +17,6 @@ const styles = StyleSheet.create({
     padding: 30,
   },
 });
-
-const selectedDateStyle = {
-  selected: true,
-  marked: true,
-};
-
-const calendertheme = {
-  todayTextColor: COLORS.primary,
-  dayTextColor: COLORS.secondary,
-  arrowColor: COLORS.primary,
-  monthTextColor: COLORS.primary,
-  textMonthFontFamily: globalStyle.font600.fontFamily,
-  textDayHeaderFontFamily: globalStyle.font600.fontFamily,
-  selectedDayBackgroundColor: COLORS.dark,
-  selectedDayTextColor: COLORS.light,
-  selectedDotColor: COLORS.light,
-};
 
 export default function DateSelectionInput(
   {
@@ -65,7 +46,7 @@ export default function DateSelectionInput(
   const onSelectDate = (unformatedDay) => {
     const day = unformatedDay.dateString;
     const selectedObject = {};
-    selectedObject[day] = selectedDateStyle;
+    selectedObject[day] = SelectedDateStyle;
     setSelectedDay(selectedObject);
   };
 
@@ -80,31 +61,10 @@ export default function DateSelectionInput(
       onBackdropPress={onDismissModal}
     >
       <View style={styles.modalContainer}>
-        <Calendar
+        <CustomCalender
           minDate={minDate}
-          theme={calendertheme}
           onDayPress={onSelectDate}
-          markingType="custom"
-          hideExtraDays
           markedDates={selectedDay}
-          enableSwipeMonths
-          disableAllTouchEventsForDisabledDays
-          renderArrow={(direction) => (direction === 'left' ? (
-            <Icon
-              name="right-arrow"
-              size={16}
-              color={COLORS.primary}
-              style={{
-                transform: [{ scaleX: -1 }],
-              }}
-            />
-          ) : (
-            <Icon
-              name="right-arrow"
-              size={16}
-              color={COLORS.primary}
-            />
-          ))}
         />
 
         <ButtonComponent
