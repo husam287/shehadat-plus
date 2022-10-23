@@ -45,12 +45,55 @@ export default class ShehadatService {
     return promise;
   }
 
+  static editOne({
+    id,
+    money,
+    type,
+    interest,
+    startDate,
+    endDate,
+  }) {
+    const promise = new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'UPDATE Shehadat '
+          + 'SET money = ?, '
+          + 'type = ? ',
+          +'interest = ? ',
+          +'startDate = ? ',
+          +'endDate = ? ',
+          +'WHERE id == ?',
+          [money, type, interest, startDate, endDate, id],
+          (txObj, { rows: { _array } }) => resolve(_array),
+          (txObj, error) => reject(error),
+        );
+      });
+    });
+
+    return promise;
+  }
+
   static getAll() {
     const promise = new Promise((resolve, reject) => {
       db.transaction((tx) => {
         tx.executeSql(
           'SELECT * FROM Shehadat',
           null,
+          (txObj, { rows: { _array } }) => resolve(_array),
+          (txObj, error) => reject(error),
+        );
+      });
+    });
+
+    return promise;
+  }
+
+  static deleteOne(id) {
+    const promise = new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'DELETE FROM Shehadat WHERE id==?',
+          [id],
           (txObj, { rows: { _array } }) => resolve(_array),
           (txObj, error) => reject(error),
         );

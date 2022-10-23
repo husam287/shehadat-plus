@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     fontSize: 14,
     textTransform: 'capitalize',
-    ...globalStyle.font500,
+    ...globalStyle.font600,
     textAlign: 'center',
   },
   spaceTop20: {
@@ -46,12 +46,12 @@ export default function OwnersTapbar({ data, selectedTab, setSelectedTab }) {
         horizontal
         showsHorizontalScrollIndicator={false}
         data={data}
-        keyExtractor={(item, index) => `${index}`}
+        keyExtractor={(item) => item?.id}
         renderItem={({ item }) => (
           <Tab
-            title={item}
-            isSelected={item === selectedTab}
-            onClick={() => setSelectedTab(item)}
+            title={item?.name}
+            isSelected={item?.id === selectedTab}
+            onClick={() => setSelectedTab(item?.id)}
           />
         )}
       />

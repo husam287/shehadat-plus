@@ -10,6 +10,7 @@ import Metrics from 'constants/Metrics';
 import CustomText from 'components/General/CustomText';
 import globalStyle from 'constants/Styles';
 import GeneralDbService from 'services/GeneralDbService';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   centering: {
@@ -29,7 +30,10 @@ const styles = StyleSheet.create({
     ...globalStyle.font600,
   },
 });
+
 function ProfileScreen() {
+  const navigation = useNavigation();
+
   const onTakeBackup = () => {
   // nothing yet
   };
@@ -40,7 +44,7 @@ function ProfileScreen() {
   };
 
   const onEditOwners = () => {
-    // nothing yet
+    navigation.navigate('editOwners');
   };
 
   return (

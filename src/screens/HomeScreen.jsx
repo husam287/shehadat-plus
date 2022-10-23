@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ScrollView, StyleSheet, View,
 } from 'react-native';
@@ -13,6 +13,7 @@ import ShehadatService from 'services/ShehadatService';
 import HandleErrors from 'hooks/handleErrors';
 import ShehadaAddButton from 'components/HomeComponents/ShehadaAddButton';
 import OwnersTapbar from 'components/HomeComponents/OwnersTapbar';
+import OwnerService from 'services/OwnerService';
 
 const styles = StyleSheet.create({
   justifyBetween: {
@@ -31,7 +32,8 @@ const styles = StyleSheet.create({
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-  const [selectedTab, setSelectedTab] = useState('All');
+  const [owners, setOwners] = useState(null);
+  const [selectedTab, setSelectedTab] = useState(null);
   const [shehadat, setShehadat] = useState(null);
 
   const onClickOnShehadaHandler = (id) => {
@@ -62,10 +64,19 @@ export default function HomeScreen() {
     }, []),
   );
 
+  useEffect(() => {
+    OwnerService.getAll()
+      .then((res) => {
+        setOwners(res);
+        setSelectedTab(res?.[0]?.id);
+      })
+      .catch((err) => HandleErrors(err));
+  }, []);
+
   return (
     <ScreenWrapper customStyle={styles.zeroPadding}>
       <OwnersTapbar
-        data={['All', 'Me', 'Sherif', 'Children']}
+        data={owners}
         selectedTab={selectedTab}
         setSelectedTab={setSelectedTab}
       />
