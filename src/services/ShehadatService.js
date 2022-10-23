@@ -74,4 +74,19 @@ export default class ShehadatService {
 
     return promise;
   }
+
+  static getTotalMoneyAmount() {
+    const promise = new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'SELECT SUM(totalMoney) as summationOfMoney FROM Shehadat',
+          null,
+          (txObj, { rows: { _array } }) => resolve(_array?.[0]),
+          (txObj, error) => reject(error),
+        );
+      });
+    });
+
+    return promise;
+  }
 }

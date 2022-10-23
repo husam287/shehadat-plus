@@ -38,13 +38,27 @@ export default function HomeScreen() {
     navigation.navigate('shehadaDetails', { shehadaId: id });
   };
 
+  const getAllShehadat = () => {
+    ShehadatService.getAll()
+      .then((res) => {
+        setShehadat(res);
+      })
+      .catch((err) => HandleErrors(err));
+  };
+
+  const [totalMoney, setTotalMoney] = useState(null);
+  const getTotalMoney = () => {
+    ShehadatService.getTotalMoneyAmount()
+      .then((res) => {
+        setTotalMoney(res?.summationOfMoney);
+      })
+      .catch((err) => HandleErrors(err));
+  };
+
   useFocusEffect(
     useCallback(() => {
-      ShehadatService.getAll()
-        .then((res) => {
-          setShehadat(res);
-        })
-        .catch((err) => HandleErrors(err));
+      getAllShehadat();
+      getTotalMoney();
     }, []),
   );
 
@@ -58,7 +72,7 @@ export default function HomeScreen() {
 
       <ScrollView style={styles.screenPadding}>
         <View style={[globalStyle.row, styles.justifyBetween]}>
-          <TotalAmountBlock total={300000} />
+          <TotalAmountBlock total={totalMoney} />
           <ShehadaAddButton />
         </View>
 
