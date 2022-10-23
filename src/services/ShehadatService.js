@@ -6,14 +6,14 @@ export default class ShehadatService {
       db.transaction((tx) => {
         tx.executeSql(
           'CREATE TABLE IF NOT EXISTS Shehadat '
-            + '('
-            + 'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-            + 'totalMoney INT,'
-            + 'type INT,'
-            + 'interest INT,'
-            + 'startDate CHARACTER(20),'
-            + 'endDate CHARACTER(20)'
-            + ')',
+          + '('
+          + 'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+          + 'totalMoney INT,'
+          + 'type INT,'
+          + 'interest INT,'
+          + 'startDate CHARACTER(20),'
+          + 'endDate CHARACTER(20)'
+          + ')',
           null,
           (txObj, { rows: { _array } }) => resolve(_array),
           (txObj, error) => reject(error),
@@ -52,6 +52,21 @@ export default class ShehadatService {
           'SELECT * FROM Shehadat',
           null,
           (txObj, { rows: { _array } }) => resolve(_array),
+          (txObj, error) => reject(error),
+        );
+      });
+    });
+
+    return promise;
+  }
+
+  static getOne(id) {
+    const promise = new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          `SELECT * FROM Shehadat WHERE id = ${id}`,
+          null,
+          (txObj, { rows: { _array } }) => resolve(_array?.[0]),
           (txObj, error) => reject(error),
         );
       });

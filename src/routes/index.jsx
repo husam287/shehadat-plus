@@ -12,6 +12,8 @@ import i18n from 'assets/i18n';
 import useCheckNewUpdates from 'hooks/useCheckNewUpdate';
 import COLORS from 'constants/Colors';
 import NotificationListnerContainer from 'components/General/NotificationListnerContainer';
+import GeneralDbService from 'services/GeneralDbService';
+import HandleErrors from 'hooks/handleErrors';
 import MainStack from './Stacks/MainStack';
 
 function Route() {
@@ -40,12 +42,19 @@ function Route() {
     i18n.locale = lang;
   };
 
+  const initAllTablesHandler = () => {
+    GeneralDbService.initAllTables()
+      .then(() => { })
+      .catch((err) => HandleErrors(err));
+  };
+
   // Non user login
   useEffect(() => {
     const bootstrapAsync = async () => {
       const userToken = await AsyncStorage.getItem('token');
       dispatch(login(userToken));
       initiallizeLang();
+      initAllTablesHandler();
     };
 
     bootstrapAsync();
