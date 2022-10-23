@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   ScrollView, StyleSheet, View,
 } from 'react-native';
@@ -8,7 +8,7 @@ import globalStyle from 'constants/Styles';
 import TotalAmountBlock from 'components/HomeComponents/TotalAmountBlock';
 import ScreenWrapper from 'components/General/ScreenWrapper';
 import ShehadaCard from 'components/HomeComponents/ShehadaCard';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import ShehadatService from 'services/ShehadatService';
 import HandleErrors from 'hooks/handleErrors';
 import ShehadaAddButton from 'components/HomeComponents/ShehadaAddButton';
@@ -38,13 +38,15 @@ export default function HomeScreen() {
     navigation.navigate('shehadaDetails', { shehadaId: id });
   };
 
-  useEffect(() => {
-    ShehadatService.getAll()
-      .then((res) => {
-        setShehadat(res);
-      })
-      .catch((err) => HandleErrors(err));
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      ShehadatService.getAll()
+        .then((res) => {
+          setShehadat(res);
+        })
+        .catch((err) => HandleErrors(err));
+    }, []),
+  );
 
   return (
     <ScreenWrapper customStyle={styles.zeroPadding}>

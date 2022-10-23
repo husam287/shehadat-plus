@@ -4,9 +4,7 @@ import { setDangerToast } from 'reducers/appReducer';
 export default function HandleErrors(err) {
   const showErrorToast = (msg) => {
     store.dispatch(
-      setDangerToast({
-        message: msg,
-      }),
+      setDangerToast(msg),
     );
   };
 
@@ -17,6 +15,8 @@ export default function HandleErrors(err) {
     showErrorToast(err?.error?.message);
   } else if (err?.message) {
     showErrorToast(err?.message);
+  } else if (err) {
+    showErrorToast(err);
   } else {
     showErrorToast('UNEXPECTED_ERROR');
   }

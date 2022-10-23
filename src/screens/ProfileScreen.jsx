@@ -9,6 +9,7 @@ import MyPhoto from 'assets/images/profile-image.jpeg';
 import Metrics from 'constants/Metrics';
 import CustomText from 'components/General/CustomText';
 import globalStyle from 'constants/Styles';
+import GeneralDbService from 'services/GeneralDbService';
 
 const styles = StyleSheet.create({
   centering: {
@@ -35,6 +36,7 @@ function ProfileScreen() {
 
   const onLoadBackup = () => {
   // nothing yet
+    GeneralDbService.removeDb();
   };
 
   const onEditOwners = () => {

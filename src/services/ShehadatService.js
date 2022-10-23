@@ -8,11 +8,11 @@ export default class ShehadatService {
           'CREATE TABLE IF NOT EXISTS Shehadat '
           + '('
           + 'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-          + 'totalMoney INT,'
+          + 'totalMoney INT CHECK (totalMoney>0),'
           + 'type INT,'
-          + 'interest INT,'
-          + 'startDate CHARACTER(20),'
-          + 'endDate CHARACTER(20)'
+          + 'interest REAL CHECK (interest>0),'
+          + 'startDate TEXT,'
+          + 'endDate TEXT CHECK (endDate>startDate)'
           + ')',
           null,
           (txObj, { rows: { _array } }) => resolve(_array),

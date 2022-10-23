@@ -14,6 +14,7 @@ import COLORS from 'constants/Colors';
 import NotificationListnerContainer from 'components/General/NotificationListnerContainer';
 import GeneralDbService from 'services/GeneralDbService';
 import HandleErrors from 'hooks/handleErrors';
+import SnackbarComponent from 'components/General/SnackbarComponent';
 import MainStack from './Stacks/MainStack';
 
 function Route() {
@@ -75,6 +76,8 @@ function Route() {
       <NavigationContainer theme={navTheme}>
         <NotificationListnerContainer>
           <MainStack />
+
+          <SnackbarComponent />
         </NotificationListnerContainer>
       </NavigationContainer>
     </SafeAreaProvider>

@@ -1,7 +1,9 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 import React from 'react';
+import moment from 'moment';
 import * as YUP from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+
 import ScreenWrapper from 'components/General/ScreenWrapper';
 import COLORS from 'constants/Colors';
 import { Controller, useForm } from 'react-hook-form';
@@ -10,6 +12,9 @@ import ControllableInput from 'components/General/Inputs/ControllableInput';
 import NormalSelectionModal from 'components/General/Inputs/NormalSelectionModal';
 import DateSelectionInput from 'components/General/Inputs/DateSelectionInput';
 import { useNavigation } from '@react-navigation/native';
+import ShehadatService from 'services/ShehadatService';
+import HandleErrors from 'hooks/handleErrors';
+import showSuccessMsg from 'hooks/showSuccessMsg';
 
 const styles = StyleSheet.create({
   marginTop0: {
@@ -25,12 +30,16 @@ const styles = StyleSheet.create({
 
 export default function AddShehadaScreen() {
   const schema = YUP.object().shape({
-    money: YUP.string().required(),
-    profit: YUP.string().required(),
+    money: YUP.number().required().moreThan(0),
+    profit: YUP.number().required().moreThan(0),
     type: YUP.object().required(),
     owner: YUP.object().required(),
     startDate: YUP.string().required(),
-    endDate: YUP.string().required(),
+    endDate: YUP.string().required().test(
+      'date valid',
+      'End date must be after start date',
+      (value) => moment(YUP.ref('startDate')).isBefore(value),
+    ),
   });
 
   const navigation = useNavigation();
@@ -40,8 +49,18 @@ export default function AddShehadaScreen() {
   });
 
   const onAddShehadaHandler = (values) => {
-    console.log(values);
-    navigation.goBack();
+    ShehadatService.insertInto({
+      money: values?.money,
+      interest: values?.profit,
+      endDate: values?.endDate,
+      startDate: values?.startDate,
+      type: values?.type?.value,
+    })
+      .then(() => {
+        showSuccessMsg('New Shehada has been added successfully!');
+        navigation.goBack();
+      })
+      .catch((err) => HandleErrors(err));
   };
 
   return (
@@ -77,7 +96,7 @@ export default function AddShehadaScreen() {
                 onChange={onChange}
                 onBlur={onBlur}
                 error={fieldState.error?.message}
-                data={[{ label: 'hi', value: 'ko' }, { label: 'ko', value: 'j' }]}
+                data={[{ label: '1 Month', value: 1 }, { label: '3 Months', value: 3 }]}
                 placeholderText="Type"
               />
             )}
@@ -94,7 +113,7 @@ export default function AddShehadaScreen() {
                 onChange={onChange}
                 onBlur={onBlur}
                 error={fieldState.error?.message}
-                data={[{ label: 'hi', value: 'ko' }, { label: 'ko', value: 'j' }]}
+                data={[{ label: 'Me', value: 1 }, { label: 'Children', value: 2 }, { label: 'Sherif', value: 3 }, { label: 'Teta', value: 4 }]}
                 placeholderText="Owner"
               />
             )}
