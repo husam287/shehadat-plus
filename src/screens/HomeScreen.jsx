@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList, ScrollView, StyleSheet, TouchableOpacity, View,
 } from 'react-native';
@@ -13,6 +13,8 @@ import ButtonComponent from 'components/General/ButtonComponent';
 import ShehadaCard from 'components/HomeComponents/ShehadaCard';
 import CustomText from 'components/General/CustomText';
 import { useNavigation } from '@react-navigation/native';
+import ShehadatService from 'services/ShehadatService';
+import HandleErrors from 'hooks/handleErrors';
 
 const styles = StyleSheet.create({
   justifyBetween: {
@@ -85,12 +87,43 @@ function TabBar({ data, selectedTab, setSelectedTab }) {
     </View>
   );
 }
+
 export default function HomeScreen() {
   const navigation = useNavigation();
   const [selectedTab, setSelectedTab] = useState('All');
 
   const onClickOnShehadaHandler = (id) => {
     navigation.navigate('shehadaDetails', { shehadaId: id });
+  };
+
+  useEffect(() => {
+    ShehadatService.createTable()
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => HandleErrors(err));
+  }, []);
+
+  const onTest = () => {
+    ShehadatService.getAll()
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => HandleErrors(err));
+  };
+
+  const onTest2 = () => {
+    ShehadatService.insertInto({
+      money: 100000,
+      type: 1,
+      interest: 18,
+      startDate: '2022-10-22',
+      endDate: '2022-11-30',
+    })
+      .then(() => {
+        console.log('Success Added!');
+      })
+      .catch((err) => HandleErrors(err));
   };
 
   return (
@@ -107,6 +140,15 @@ export default function HomeScreen() {
           <AddShehadaButton />
         </View>
 
+        <ButtonComponent
+          title="Test"
+          onPress={onTest}
+        />
+
+        <ButtonComponent
+          title="Test2"
+          onPress={onTest2}
+        />
         <View style={styles.spaceTop20}>
           <ShehadaCard
             totalMoney={200000}
