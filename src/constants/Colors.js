@@ -9,7 +9,7 @@ const COLORS = {
   danger: '#dc3545',
   dark: '#343a40',
   light: '#fff',
-
+  warning: '#ffc107',
   // system message colors
   successBgColor: '#38c976',
   dangerBgColor: '#ff5050',

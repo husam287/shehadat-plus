@@ -1,7 +1,7 @@
 import {
   Image, StyleSheet, View,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import {
   FontAwesome, MaterialCommunityIcons, FontAwesome5, AntDesign,
@@ -13,6 +13,10 @@ import CustomText from 'components/General/CustomText';
 import COLORS from 'constants/Colors';
 import globalStyle from 'constants/Styles';
 import currencyFormat from 'utils/currencyFormat';
+import { useRoute } from '@react-navigation/native';
+import ShehadatService from 'services/ShehadatService';
+import HandleErrors from 'hooks/handleErrors';
+import getTodayDate from 'utils/getTodayDate';
 
 const styles = StyleSheet.create({
   cardContainer: {
@@ -77,6 +81,33 @@ function InfoRow({ icon, infoBlock }) {
 
 export default function ShehadaDetails() {
   const shadowStyle = useShadow();
+
+  const shehadaId = useRoute()?.params?.shehadaId;
+  const [shehadaDetails, setShehadaDetails] = useState(null);
+  useEffect(() => {
+    if (!shehadaId) return;
+
+    ShehadatService.getOne(shehadaId)
+      .then((res) => {
+        setShehadaDetails(res);
+      })
+      .catch((err) => HandleErrors(err));
+  }, [shehadaId]);
+
+  const interestInPercentage = shehadaDetails && (shehadaDetails.interest / 100);
+
+  const interestMoneyPerMonth = shehadaDetails
+  && ((shehadaDetails.totalMoney * interestInPercentage) / 12);
+
+  const interestMoneyPerQuarterYear = shehadaDetails
+  && ((shehadaDetails.totalMoney * interestInPercentage) / 4);
+
+  const numberOfDaysLeft = moment(shehadaDetails?.endDate).diff(moment(getTodayDate()), 'days');
+
+  const warningCase = numberOfDaysLeft <= 30 ? COLORS.warning : COLORS.green;
+  const shehadaColorCode = numberOfDaysLeft <= 0 ? COLORS.danger : warningCase;
+  const daysLeftColorStyle = { color: shehadaColorCode };
+
   return (
     <ScreenWrapper>
       <View style={[styles.cardContainer, shadowStyle()]}>
@@ -87,10 +118,10 @@ export default function ShehadaDetails() {
 
         <View style={styles.innerContainer}>
           <CustomText style={styles.secondaryText}>
-            {`Type: ${'1 Month'}`}
+            {`Type: ${shehadaDetails?.type} Month`}
           </CustomText>
           <CustomText style={styles.title}>
-            {`Total: ${currencyFormat('600000')}`}
+            {`Total: ${currencyFormat(shehadaDetails?.totalMoney)}`}
           </CustomText>
 
           <View>
@@ -105,7 +136,7 @@ export default function ShehadaDetails() {
               )}
               infoBlock={(
                 <CustomText style={[styles.infoText, styles.greenColorText]}>
-                  {moment(new Date('2022-03-24')).format('DD/MM/yyyy')}
+                  {moment(shehadaDetails?.startDate).format('DD/MM/yyyy')}
                 </CustomText>
                 )}
             />
@@ -121,7 +152,7 @@ export default function ShehadaDetails() {
               )}
               infoBlock={(
                 <CustomText style={[styles.infoText, styles.dangerColorText]}>
-                  {moment(new Date('2022-03-24')).format('DD/MM/yyyy')}
+                  {moment(shehadaDetails?.endDate).format('DD/MM/yyyy')}
                 </CustomText>
                 )}
             />
@@ -137,7 +168,7 @@ export default function ShehadaDetails() {
               )}
               infoBlock={(
                 <CustomText style={[styles.infoText, styles.darkColorText]}>
-                  {`${'18'} %`}
+                  {`${shehadaDetails?.interest} %`}
                 </CustomText>
                 )}
             />
@@ -162,10 +193,10 @@ export default function ShehadaDetails() {
               infoBlock={(
                 <View style={[globalStyle.row, styles.justifyAround]}>
                   <CustomText style={[styles.infoText, styles.darkColorText]}>
-                    {`${'22'}/ ${'1'} month`}
+                    {`${currencyFormat(interestMoneyPerMonth)}/ ${'1'} month`}
                   </CustomText>
                   <CustomText style={[styles.infoText, styles.darkColorText]}>
-                    {`${'66'}/ ${'3'} month`}
+                    {`${currencyFormat(interestMoneyPerQuarterYear)}/ ${'3'} month`}
                   </CustomText>
                 </View>
                 )}
@@ -174,11 +205,11 @@ export default function ShehadaDetails() {
             {/* DAYS LEFT BEFORE EXPIRE */}
             <InfoRow
               icon={(
-                <AntDesign name="calendar" size={24} color={COLORS.green} />
+                <AntDesign name="calendar" size={24} color={shehadaColorCode} />
               )}
               infoBlock={(
-                <CustomText style={[styles.infoText, styles.greenColorText]}>
-                  {`${'22'} Days Left`}
+                <CustomText style={[styles.infoText, daysLeftColorStyle]}>
+                  {`${numberOfDaysLeft} Days Left`}
                 </CustomText>
                 )}
             />
