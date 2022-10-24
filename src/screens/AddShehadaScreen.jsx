@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import * as YUP from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,10 +11,11 @@ import ButtonComponent from 'components/General/ButtonComponent';
 import ControllableInput from 'components/General/Inputs/ControllableInput';
 import NormalSelectionModal from 'components/General/Inputs/NormalSelectionModal';
 import DateSelectionInput from 'components/General/Inputs/DateSelectionInput';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import ShehadatService from 'services/ShehadatService';
 import HandleErrors from 'hooks/handleErrors';
 import showSuccessMsg from 'hooks/showSuccessMsg';
+import OwnerService from 'services/OwnerService';
 
 const styles = StyleSheet.create({
   marginTop0: {
@@ -30,10 +31,10 @@ const styles = StyleSheet.create({
 
 export default function AddShehadaScreen() {
   const schema = YUP.object().shape({
-    money: YUP.number().required().moreThan(0),
-    profit: YUP.number().required().moreThan(0),
-    type: YUP.object().required(),
-    owner: YUP.object().required(),
+    money: YUP.string().required(),
+    profit: YUP.string().required(),
+    type: YUP.string().required(),
+    owner: YUP.string().required(),
     startDate: YUP.string().required(),
     endDate: YUP.string().required().test(
       'date valid',
@@ -41,20 +42,32 @@ export default function AddShehadaScreen() {
       (value) => moment(YUP.ref('startDate')).isBefore(value),
     ),
   });
-
   const navigation = useNavigation();
+
+  const shehadaDetails = useRoute()?.params?.shehadaDetails;
+  const isEditMode = Boolean(shehadaDetails?.id);
 
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: isEditMode
+      ? {
+        money: `${shehadaDetails?.totalMoney}`,
+        profit: `${shehadaDetails?.interest}`,
+        endDate: shehadaDetails?.endDate,
+        startDate: shehadaDetails?.startDate,
+        type: shehadaDetails?.type,
+      }
+      : undefined,
   });
 
   const onAddShehadaHandler = (values) => {
     ShehadatService.insertInto({
-      money: values?.money,
-      interest: values?.profit,
+      money: +values.money,
+      interest: +values.profit,
       endDate: values?.endDate,
       startDate: values?.startDate,
-      type: values?.type?.value,
+      type: values?.type,
+      ownerId: values?.owner,
     })
       .then(() => {
         showSuccessMsg('New Shehada has been added successfully!');
@@ -62,6 +75,32 @@ export default function AddShehadaScreen() {
       })
       .catch((err) => HandleErrors(err));
   };
+
+  const onEditShehada = (values) => {
+    ShehadatService.editOne({
+      id: shehadaDetails?.id,
+      money: +values.money,
+      interest: +values.profit,
+      endDate: values?.endDate,
+      startDate: values?.startDate,
+      type: values?.type,
+      ownerId: values?.owner,
+    })
+      .then(() => {
+        showSuccessMsg('Edited successfully!');
+        navigation.goBack();
+      })
+      .catch((err) => HandleErrors(err));
+  };
+
+  const [owners, setOwners] = useState(null);
+  useEffect(() => {
+    OwnerService.getAll()
+      .then((res) => {
+        setOwners(res?.map((item) => ({ ...item, label: item?.name, value: item?.id })));
+      })
+      .catch((err) => HandleErrors(err));
+  }, []);
 
   return (
     <ScreenWrapper spaceBetween>
@@ -113,7 +152,7 @@ export default function AddShehadaScreen() {
                 onChange={onChange}
                 onBlur={onBlur}
                 error={fieldState.error?.message}
-                data={[{ label: 'Me', value: 1 }, { label: 'Children', value: 2 }, { label: 'Sherif', value: 3 }, { label: 'Teta', value: 4 }]}
+                data={owners}
                 placeholderText="Owner"
               />
             )}
@@ -155,9 +194,9 @@ export default function AddShehadaScreen() {
 
       <ButtonComponent
         buttonCustomStyle={styles.spacing}
-        title="Add"
+        title={isEditMode ? 'Edit' : 'Add'}
         backgroundColor={COLORS.green}
-        onPress={handleSubmit(onAddShehadaHandler)}
+        onPress={isEditMode ? handleSubmit(onEditShehada) : handleSubmit(onAddShehadaHandler)}
       />
     </ScreenWrapper>
   );

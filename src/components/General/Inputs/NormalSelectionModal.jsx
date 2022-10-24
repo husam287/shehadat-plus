@@ -53,7 +53,7 @@ function NormalSelectionModal({
   };
 
   const onSelectItem = (selectedItem) => {
-    onChange(selectedItem);
+    onChange(selectedItem?.value);
     onDismissModal();
   };
 
@@ -96,7 +96,7 @@ function NormalSelectionModal({
           placeholderText={placeholderText}
           onBlur={onBlur}
           error={error}
-          value={value?.label}
+          value={data?.find((item) => item?.value === value)?.label}
           style={style}
           containerStyle={containerStyle}
           customInputStyle={customInputStyle}

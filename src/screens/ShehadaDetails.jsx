@@ -1,7 +1,7 @@
 import {
   Image, StyleSheet, View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import moment from 'moment';
 import {
   FontAwesome, MaterialCommunityIcons, FontAwesome5, AntDesign,
@@ -13,12 +13,29 @@ import CustomText from 'components/General/CustomText';
 import COLORS from 'constants/Colors';
 import globalStyle from 'constants/Styles';
 import currencyFormat from 'utils/currencyFormat';
-import { useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import ShehadatService from 'services/ShehadatService';
 import HandleErrors from 'hooks/handleErrors';
 import getTodayDate from 'utils/getTodayDate';
+import ButtonComponent from 'components/General/ButtonComponent';
+import AlertModal from 'components/General/Popups/AlertModal';
+import showSuccessMsg from 'hooks/showSuccessMsg';
 
 const styles = StyleSheet.create({
+  buttonPosition: {
+    justifyContent: 'flex-end',
+    position: 'absolute',
+    right: -5,
+    top: 10,
+    width: '100%',
+  },
+  buttonsContainer: {
+    backgroundColor: COLORS.light,
+    borderBottomStartRadius: 30,
+    borderTopStartRadius: 30,
+    ...globalStyle.row,
+    paddingStart: 10,
+  },
   cardContainer: {
     backgroundColor: COLORS.light,
     borderRadius: 10,
@@ -80,19 +97,21 @@ function InfoRow({ icon, infoBlock }) {
 }
 
 export default function ShehadaDetails() {
+  const navigation = useNavigation();
   const shadowStyle = useShadow();
 
   const shehadaId = useRoute()?.params?.shehadaId;
   const [shehadaDetails, setShehadaDetails] = useState(null);
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     if (!shehadaId) return;
 
     ShehadatService.getOne(shehadaId)
       .then((res) => {
+        console.log(res);
         setShehadaDetails(res);
       })
       .catch((err) => HandleErrors(err));
-  }, [shehadaId]);
+  }, [shehadaId]));
 
   const interestInPercentage = shehadaDetails && (shehadaDetails.interest / 100);
 
@@ -108,13 +127,51 @@ export default function ShehadaDetails() {
   const shehadaColorCode = numberOfDaysLeft <= 0 ? COLORS.danger : warningCase;
   const daysLeftColorStyle = { color: shehadaColorCode };
 
+  const onEditButtonClicked = () => {
+    navigation.navigate('addShehada', { shehadaDetails });
+  };
+
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const onDeleteButtonClicked = () => {
+    setIsAlertVisible(true);
+  };
+
+  const onConfirmDelete = () => {
+    ShehadatService.deleteOne(shehadaId)
+      .then(() => {
+        showSuccessMsg('Deleted successfully!');
+        navigation.goBack();
+      })
+      .catch((err) => HandleErrors(err));
+  };
+
+  const ownerTextColorStyle = { color: shehadaDetails?.color };
+
   return (
     <ScreenWrapper>
       <View style={[styles.cardContainer, shadowStyle()]}>
-        <Image
-          source={FloosImage}
-          style={styles.imageStyle}
-        />
+        <View>
+          <Image
+            source={FloosImage}
+            style={styles.imageStyle}
+          />
+
+          <View style={[globalStyle.row, styles.buttonPosition]}>
+            <View style={styles.buttonsContainer}>
+              <ButtonComponent
+                IconCompoent={<FontAwesome name="edit" size={20} color={COLORS.dark} />}
+                backgroundColor={COLORS.light}
+                onPress={onEditButtonClicked}
+              />
+              <ButtonComponent
+                buttonCustomStyle={styles.spaceStart}
+                IconCompoent={<AntDesign name="delete" size={20} color={COLORS.danger} />}
+                backgroundColor={COLORS.light}
+                onPress={onDeleteButtonClicked}
+              />
+            </View>
+          </View>
+        </View>
 
         <View style={styles.innerContainer}>
           <CustomText style={styles.secondaryText}>
@@ -176,11 +233,11 @@ export default function ShehadaDetails() {
             {/* OWNER */}
             <InfoRow
               icon={(
-                <FontAwesome5 name="user-tie" size={21} color={COLORS.dark} />
+                <FontAwesome5 name="user-tie" size={21} color={shehadaDetails?.color} />
               )}
               infoBlock={(
-                <CustomText style={[styles.infoText, styles.darkColorText]}>
-                  ME
+                <CustomText style={[styles.infoText, styles.darkColorText, ownerTextColorStyle]}>
+                  {shehadaDetails?.name}
                 </CustomText>
                 )}
             />
@@ -217,6 +274,12 @@ export default function ShehadaDetails() {
         </View>
       </View>
 
+      <AlertModal
+        isModalVisible={isAlertVisible}
+        setIsModalVisible={setIsAlertVisible}
+        onConfirmation={onConfirmDelete}
+        warningMessage="Are you sure you want to delete this shehada?!"
+      />
     </ScreenWrapper>
   );
 }

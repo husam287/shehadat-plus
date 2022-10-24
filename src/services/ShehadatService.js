@@ -7,12 +7,16 @@ export default class ShehadatService {
         tx.executeSql(
           'CREATE TABLE IF NOT EXISTS Shehadat '
           + '('
-          + 'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-          + 'totalMoney INT CHECK (totalMoney>0),'
-          + 'type INT,'
-          + 'interest REAL CHECK (interest>0),'
-          + 'startDate TEXT,'
-          + 'endDate TEXT CHECK (endDate>startDate)'
+          + 'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+          + 'totalMoney INT CHECK (totalMoney>0), '
+          + 'type INT, '
+          + 'interest REAL CHECK (interest>0), '
+          + 'startDate TEXT, '
+          + 'endDate TEXT CHECK (endDate>startDate), '
+          + 'ownerId INTEGER, '
+          + 'CONSTRAINT fk_Owner '
+          + 'FOREIGN KEY (ownerId) '
+          + 'REFERENCES Owner(id) '
           + ')',
           null,
           (txObj, { rows: { _array } }) => resolve(_array),
@@ -30,12 +34,13 @@ export default class ShehadatService {
     interest,
     startDate,
     endDate,
+    ownerId,
   }) {
     const promise = new Promise((resolve, reject) => {
       db.transaction((tx) => {
         tx.executeSql(
-          'INSERT INTO Shehadat (totalMoney, type, interest, startDate, endDate) values (?, ?, ?, ?, ?)',
-          [money, type, interest, startDate, endDate],
+          'INSERT INTO Shehadat (totalMoney, type, interest, startDate, endDate, ownerId) values (?, ?, ?, ?, ?, ?)',
+          [money, type, interest, startDate, endDate, ownerId],
           (txObj, { rows: { _array } }) => resolve(_array),
           (txObj, error) => reject(error),
         );
@@ -52,18 +57,20 @@ export default class ShehadatService {
     interest,
     startDate,
     endDate,
+    ownerId,
   }) {
     const promise = new Promise((resolve, reject) => {
       db.transaction((tx) => {
         tx.executeSql(
           'UPDATE Shehadat '
-          + 'SET money = ?, '
-          + 'type = ? ',
-          +'interest = ? ',
-          +'startDate = ? ',
-          +'endDate = ? ',
+          + 'SET totalMoney = ?, '
+          + 'type = ?, '
+          + 'interest = ?, '
+          + 'startDate = ?, '
+          + 'endDate = ?, ',
+          +'ownerId = ? ',
           +'WHERE id == ?',
-          [money, type, interest, startDate, endDate, id],
+          [money, type, interest, startDate, endDate, ownerId, id],
           (txObj, { rows: { _array } }) => resolve(_array),
           (txObj, error) => reject(error),
         );
@@ -107,7 +114,7 @@ export default class ShehadatService {
     const promise = new Promise((resolve, reject) => {
       db.transaction((tx) => {
         tx.executeSql(
-          `SELECT * FROM Shehadat WHERE id = ${id}`,
+          `SELECT * FROM Shehadat as s, Owner as o WHERE s.id = ${id} AND s.ownerId = o.id`,
           null,
           (txObj, { rows: { _array } }) => resolve(_array?.[0]),
           (txObj, error) => reject(error),
