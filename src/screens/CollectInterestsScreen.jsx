@@ -1,22 +1,36 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
+import {
+  FlatList, StyleSheet, View,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import ScreenWrapper from 'components/General/ScreenWrapper';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import InterestService from 'services/InterestService';
 import HandleErrors from 'hooks/handleErrors';
 import Badge from 'components/General/Badge';
 import COLORS from 'constants/Colors';
 import ShehadaRow from 'components/CollectMoneyComponents/ShehadaRow';
+import ButtonComponent from 'components/General/ButtonComponent';
+import globalStyle from 'constants/Styles';
+import showSuccessMsg from 'hooks/showSuccessMsg';
 
 const styles = StyleSheet.create({
   badgeContainer: {
     marginVertical: 10,
   },
+  btnsContainer: {
+    ...globalStyle.row,
+    justifyContent: 'space-between',
+    paddingTop: 20,
+  },
+  semiFullSpace: {
+    width: '48%',
+  },
 });
 
 export default function CollectInterestsScreen() {
-  const interestDate = useRoute()?.params?.interestDate;
+  const navigation = useNavigation();
 
+  const interestDate = useRoute()?.params?.interestDate;
   const [interests, setInterests] = useState(null);
 
   useEffect(() => {
@@ -35,12 +49,30 @@ export default function CollectInterestsScreen() {
       .catch((err) => HandleErrors(err));
   }, [interestDate]);
 
+  const onCollectAllPreviousDays = () => {
+    InterestService.deleteAllBeforeOrAt(interestDate)
+      .then(() => {
+        showSuccessMsg(`All profits before ${interestDate} have been collected!`);
+        navigation.goBack();
+      })
+      .catch((err) => HandleErrors(err));
+  };
+
+  const onCollectThisDayOnly = () => {
+    InterestService.deleteByDate(interestDate)
+      .then(() => {
+        showSuccessMsg(`${interestDate} day has been collected!`);
+        navigation.goBack();
+      })
+      .catch((err) => HandleErrors(err));
+  };
   return (
     <ScreenWrapper>
-
-      <ScrollView>
-        {interests?.map((item) => (
-          <View key={item?.id}>
+      <FlatList
+        data={interests}
+        keyExtractor={(item) => (item?.id)}
+        renderItem={({ item }) => (
+          <View>
             <View style={styles.badgeContainer}>
               <Badge bgColor={COLORS.dark} text={item?.interestDate} />
             </View>
@@ -55,9 +87,27 @@ export default function CollectInterestsScreen() {
               />
             ))}
           </View>
+        )}
+      />
 
-        ))}
-      </ScrollView>
+      <View style={styles.btnsContainer}>
+        <View style={styles.semiFullSpace}>
+          <ButtonComponent
+            title="Collect All Previous"
+            backgroundColor={COLORS.primary}
+            onPress={onCollectAllPreviousDays}
+          />
+        </View>
+        <View style={styles.semiFullSpace}>
+          <ButtonComponent
+            backgroundColor="transparent"
+            color={COLORS.primary}
+            borderColor={COLORS.primary}
+            title="Collect Day"
+            onPress={onCollectThisDayOnly}
+          />
+        </View>
+      </View>
     </ScreenWrapper>
   );
 }

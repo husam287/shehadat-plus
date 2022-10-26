@@ -38,8 +38,8 @@ export default function CalenderScreen() {
   );
 
   const markDateHandler = (days) => {
-    setselectedDates((prevState) => {
-      const newState = { ...prevState };
+    setselectedDates(() => {
+      const newState = {};
       days?.forEach((element) => {
         newState[element] = SelectedDateStyle;
       });

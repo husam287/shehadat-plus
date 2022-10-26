@@ -120,6 +120,20 @@ export default class InterestService {
     return promise;
   }
 
+  static deleteByDate(interestDate) {
+    const promise = new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'DELETE FROM Interest WHERE interestDate == ?',
+          [interestDate],
+          (txObj, { rows: { _array } }) => resolve(_array),
+          (txObj, error) => reject(error),
+        );
+      });
+    });
+    return promise;
+  }
+
   static deleteAllBeforeOrAt(interestDate) {
     const promise = new Promise((resolve, reject) => {
       db.transaction((tx) => {
