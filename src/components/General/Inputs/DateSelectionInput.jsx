@@ -6,6 +6,7 @@ import ReactNativeModal from 'react-native-modal';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import COLORS from 'constants/Colors';
+import Metrics from 'constants/Metrics';
 import PureInput from './PureInput';
 import ButtonComponent from '../ButtonComponent';
 import CustomCalender, { SelectedDateStyle } from '../CustomCalender';
@@ -14,6 +15,8 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: COLORS.light,
     borderRadius: 30,
+    height: Metrics.screenHeight / 1.55,
+    justifyContent: 'space-between',
     padding: 30,
   },
 });
@@ -63,6 +66,7 @@ export default function DateSelectionInput(
       <View style={styles.modalContainer}>
         <CustomCalender
           minDate={minDate}
+          current={value}
           onDayPress={onSelectDate}
           markedDates={selectedDay}
         />
