@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   token: null,
   userData: null,
+  hasFinishSetup: false,
 };
 
 export const authSlice = createSlice({
@@ -22,10 +23,16 @@ export const authSlice = createSlice({
       token: null,
       userData: null,
     }),
+    setHasFinishSetup: (state, action) => ({
+      ...state,
+      hasFinishSetup: action.payload,
+    }),
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { login, setUserInfo, logout } = authSlice.actions;
+export const {
+  login, setUserInfo, logout, setHasFinishSetup,
+} = authSlice.actions;
 
 export default authSlice.reducer;

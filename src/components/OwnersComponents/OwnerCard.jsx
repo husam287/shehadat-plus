@@ -28,6 +28,7 @@ export default function OwnerCard({
   index,
   name,
   color,
+  hideButtons = false,
   onEditButtonClicked = () => {},
   onDeleteButtonClicked = () => {},
 }) {
@@ -44,18 +45,22 @@ export default function OwnerCard({
         </CustomText>
       </View>
 
-      <View style={[globalStyle.row, styles.justifyAround]}>
-        <ButtonComponent
-          IconCompoent={<FontAwesome name="edit" size={24} color={COLORS.dark} />}
-          backgroundColor={COLORS.warning}
-          onPress={onEditButtonClicked}
-        />
-        <ButtonComponent
-          IconCompoent={<AntDesign name="deleteuser" size={24} color={COLORS.light} />}
-          backgroundColor={COLORS.danger}
-          onPress={onDeleteButtonClicked}
-        />
-      </View>
+      {!hideButtons
+        ? (
+          <View style={[globalStyle.row, styles.justifyAround]}>
+            <ButtonComponent
+              IconCompoent={<FontAwesome name="edit" size={24} color={COLORS.dark} />}
+              backgroundColor={COLORS.warning}
+              onPress={onEditButtonClicked}
+            />
+            <ButtonComponent
+              IconCompoent={<AntDesign name="deleteuser" size={24} color={COLORS.light} />}
+              backgroundColor={COLORS.danger}
+              onPress={onDeleteButtonClicked}
+            />
+          </View>
+        )
+        : null}
     </View>
   );
 }

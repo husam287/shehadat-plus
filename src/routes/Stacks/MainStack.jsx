@@ -1,23 +1,34 @@
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import BottomNavigator from 'routes/TabNavigator/BottomTabNavigator';
 import AddShehadaScreen from 'screens/AddShehadaScreen';
 import CollectInterestsScreen from 'screens/CollectInterestsScreen';
 import EditOwners from 'screens/EditOwners';
 import ShehadaDetails from 'screens/ShehadaDetails';
 import TestScreen from 'screens/TestScreen';
+import WelcomeScreen from 'screens/WelcomeScreen';
 import RouterOption from '../HeaderOptions/RouterOption';
 
 const Stack = createStackNavigator();
 
 export default function MainStack() {
+  const hasFinishSetup = useSelector((state) => state.auth.hasFinishSetup);
+
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName={hasFinishSetup ? 'HomeStack' : 'welcomeScreen'}
+    >
       {/* MAIN SCREENS */}
       <Stack.Group>
         <Stack.Screen
           name="HomeStack"
           component={BottomNavigator}
+          options={({ navigation }) => RouterOption({ navigation })}
+        />
+        <Stack.Screen
+          name="welcomeScreen"
+          component={WelcomeScreen}
           options={({ navigation }) => RouterOption({ navigation })}
         />
         <Stack.Screen

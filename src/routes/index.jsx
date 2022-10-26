@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import * as Localization from 'expo-localization';
 import { I18nManager } from 'react-native';
@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Updates from 'expo-updates';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { login } from 'reducers/authReducer';
+import { login, setHasFinishSetup } from 'reducers/authReducer';
 import i18n from 'assets/i18n';
 import useCheckNewUpdates from 'hooks/useCheckNewUpdate';
 import COLORS from 'constants/Colors';
@@ -49,17 +49,23 @@ function Route() {
       .catch((err) => HandleErrors(err));
   };
 
+  const initOnBoardingFLow = useCallback(async () => {
+    const hasFinishSetup = JSON.parse(await AsyncStorage.getItem('hasFinishSetup'));
+    dispatch(setHasFinishSetup(hasFinishSetup));
+  }, [dispatch]);
+
   // Non user login
   useEffect(() => {
     const bootstrapAsync = async () => {
       const userToken = await AsyncStorage.getItem('token');
       dispatch(login(userToken));
+      initOnBoardingFLow();
       initiallizeLang();
       initAllTablesHandler();
     };
 
     bootstrapAsync();
-  }, [dispatch]);
+  }, [dispatch, initOnBoardingFLow]);
 
   // User login
   useEffect(() => {
