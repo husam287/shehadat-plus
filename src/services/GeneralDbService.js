@@ -1,4 +1,5 @@
 import * as FileSystem from 'expo-file-system';
+import InterestService from './InterestService';
 import OwnerService from './OwnerService';
 import ShehadatService from './ShehadatService';
 
@@ -11,6 +12,7 @@ export default class GeneralDbService {
     return Promise.all([
       ShehadatService.createTable(),
       OwnerService.createTable(),
+      InterestService.createTable(),
     ]);
   }
 }

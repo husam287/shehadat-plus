@@ -2,6 +2,7 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import React from 'react';
 import BottomNavigator from 'routes/TabNavigator/BottomTabNavigator';
 import AddShehadaScreen from 'screens/AddShehadaScreen';
+import CollectInterestsScreen from 'screens/CollectInterestsScreen';
 import EditOwners from 'screens/EditOwners';
 import ShehadaDetails from 'screens/ShehadaDetails';
 import TestScreen from 'screens/TestScreen';
@@ -41,6 +42,14 @@ export default function MainStack() {
           name="editOwners"
           component={EditOwners}
           options={({ navigation }) => RouterOption({ navigation, title: 'Edit Owners' })}
+        />
+        <Stack.Screen
+          name="collectInterestsScreen"
+          component={CollectInterestsScreen}
+          options={({ navigation }) => ({
+            ...RouterOption({ navigation, title: 'Collect Money', isModal: true }),
+            ...TransitionPresets.ModalSlideFromBottomIOS,
+          })}
         />
       </Stack.Group>
 

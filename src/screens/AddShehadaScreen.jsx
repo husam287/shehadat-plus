@@ -16,6 +16,7 @@ import ShehadatService from 'services/ShehadatService';
 import HandleErrors from 'hooks/handleErrors';
 import showSuccessMsg from 'hooks/showSuccessMsg';
 import OwnerService from 'services/OwnerService';
+import InterestService from 'services/InterestService';
 
 const styles = StyleSheet.create({
   marginTop0: {
@@ -56,9 +57,33 @@ export default function AddShehadaScreen() {
         endDate: shehadaDetails?.endDate,
         startDate: shehadaDetails?.startDate,
         type: shehadaDetails?.type,
+        owner: shehadaDetails?.ownerId,
       }
       : undefined,
   });
+
+  const onAddTheInterests = (res) => {
+    const startDate = moment(res.startDate);
+    const endDate = moment(res.endDate);
+
+    const interestYearMonths = Number(res.type) === 1 ? 12 : 4;
+    const interestAmountOfMoney = (res.money * (res.interest / 100)) / interestYearMonths;
+
+    const cloneOfStartDate = startDate.clone().add(1, 'months');
+
+    const arrayOfInterests = [];
+
+    while (cloneOfStartDate.isBefore(endDate)) {
+      arrayOfInterests.push({
+        shehadaId: res?.id,
+        interestDate: cloneOfStartDate.format('yyyy-MM-DD'),
+        moneyAmount: Number(interestAmountOfMoney?.toFixed(2)),
+      });
+      cloneOfStartDate.add(Number(res.type), 'months');
+    }
+
+    return InterestService.insertMany(arrayOfInterests);
+  };
 
   const onAddShehadaHandler = (values) => {
     ShehadatService.insertInto({
@@ -69,6 +94,7 @@ export default function AddShehadaScreen() {
       type: values?.type,
       ownerId: values?.owner,
     })
+      .then((res) => onAddTheInterests(res))
       .then(() => {
         showSuccessMsg('New Shehada has been added successfully!');
         navigation.goBack();

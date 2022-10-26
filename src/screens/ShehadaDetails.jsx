@@ -107,7 +107,6 @@ export default function ShehadaDetails() {
 
     ShehadatService.getOne(shehadaId)
       .then((res) => {
-        console.log(res);
         setShehadaDetails(res);
       })
       .catch((err) => HandleErrors(err));

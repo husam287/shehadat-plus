@@ -41,7 +41,9 @@ export default class ShehadatService {
         tx.executeSql(
           'INSERT INTO Shehadat (totalMoney, type, interest, startDate, endDate, ownerId) values (?, ?, ?, ?, ?, ?)',
           [money, type, interest, startDate, endDate, ownerId],
-          (txObj, { rows: { _array } }) => resolve(_array),
+          (txObj, { insertId }) => resolve({
+            id: insertId, money, interest, type, startDate, endDate,
+          }),
           (txObj, error) => reject(error),
         );
       });

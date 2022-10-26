@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   ScrollView, StyleSheet, View,
 } from 'react-native';
@@ -20,7 +20,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   screenPadding: {
+    flex: 1,
     padding: Metrics.screenWidth * 0.056,
+  },
+  spaceBottom20: {
+    marginBottom: 20,
   },
   spaceTop20: {
     marginTop: 20,
@@ -35,6 +39,7 @@ export default function HomeScreen() {
   const [owners, setOwners] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
   const [shehadat, setShehadat] = useState(null);
+  const [totalMoney, setTotalMoney] = useState(null);
 
   const onClickOnShehadaHandler = (id) => {
     navigation.navigate('shehadaDetails', { shehadaId: id });
@@ -48,7 +53,6 @@ export default function HomeScreen() {
       .catch((err) => HandleErrors(err));
   };
 
-  const [totalMoney, setTotalMoney] = useState(null);
   const getTotalMoney = () => {
     ShehadatService.getTotalMoneyAmount()
       .then((res) => {
@@ -57,21 +61,22 @@ export default function HomeScreen() {
       .catch((err) => HandleErrors(err));
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      getAllShehadat();
-      getTotalMoney();
-    }, []),
-  );
-
-  useEffect(() => {
+  const gerOwners = () => {
     OwnerService.getAll()
       .then((res) => {
         setOwners(res);
         setSelectedTab(res?.[0]?.id);
       })
       .catch((err) => HandleErrors(err));
-  }, []);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      gerOwners();
+      getAllShehadat();
+      getTotalMoney();
+    }, []),
+  );
 
   return (
     <ScreenWrapper customStyle={styles.zeroPadding}>
@@ -87,7 +92,7 @@ export default function HomeScreen() {
           <ShehadaAddButton />
         </View>
 
-        <View style={styles.spaceTop20}>
+        <View style={[styles.spaceTop20, styles.spaceBottom20]}>
           {shehadat?.map((item) => (
             <ShehadaCard
               key={item?.id}
