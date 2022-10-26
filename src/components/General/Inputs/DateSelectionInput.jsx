@@ -1,7 +1,7 @@
 import {
   StyleSheet, TouchableOpacity, View,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactNativeModal from 'react-native-modal';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -57,6 +57,13 @@ export default function DateSelectionInput(
     onChange(Object.keys(selectedDay)?.[0]);
     onDismissModal();
   };
+
+  useEffect(() => {
+    if (!isModalVisible) return;
+    if (!value) return;
+
+    onSelectDate({ dateString: value });
+  }, [isModalVisible, value]);
 
   const ModalMarkup = (
     <ReactNativeModal

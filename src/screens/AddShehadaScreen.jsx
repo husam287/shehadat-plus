@@ -1,4 +1,6 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
+import {
+  ScrollView, StyleSheet, TouchableOpacity, View,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import * as YUP from 'yup';
@@ -17,8 +19,22 @@ import HandleErrors from 'hooks/handleErrors';
 import showSuccessMsg from 'hooks/showSuccessMsg';
 import OwnerService from 'services/OwnerService';
 import InterestService from 'services/InterestService';
+import CustomText from 'components/General/CustomText';
+import globalStyle from 'constants/Styles';
 
 const styles = StyleSheet.create({
+  actionText: {
+    marginTop: 10,
+    paddingTop: 0,
+    padding: 10,
+    textDecorationLine: 'underline',
+    textTransform: 'uppercase',
+    ...globalStyle.font600,
+  },
+  actionTextContainer: {
+    ...globalStyle.row,
+    justifyContent: 'space-around',
+  },
   marginTop0: {
     marginTop: 5,
   },
@@ -48,7 +64,9 @@ export default function AddShehadaScreen() {
   const shehadaDetails = useRoute()?.params?.shehadaDetails;
   const isEditMode = Boolean(shehadaDetails?.id);
 
-  const { control, handleSubmit } = useForm({
+  const {
+    control, handleSubmit, setValue, getValues,
+  } = useForm({
     resolver: yupResolver(schema),
     defaultValues: isEditMode
       ? {
@@ -127,6 +145,14 @@ export default function AddShehadaScreen() {
       })
       .catch((err) => HandleErrors(err));
   }, []);
+
+  const addEndDateYears = (numberOfYears) => {
+    const startDateValue = getValues('startDate');
+    if (!startDateValue) return;
+
+    const endDateValue = moment(startDateValue).clone().add(1, 'days').add(numberOfYears, 'years');
+    setValue('endDate', endDateValue.format('yyyy-MM-DD'));
+  };
 
   return (
     <ScreenWrapper spaceBetween>
@@ -215,6 +241,16 @@ export default function AddShehadaScreen() {
               />
             )}
           />
+
+          <View style={styles.actionTextContainer}>
+            <TouchableOpacity onPress={() => addEndDateYears(1)}>
+              <CustomText style={styles.actionText}>+1 year</CustomText>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => addEndDateYears(3)}>
+              <CustomText style={styles.actionText}>+3 years</CustomText>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
 
