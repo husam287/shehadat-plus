@@ -82,11 +82,20 @@ export default class ShehadatService {
     return promise;
   }
 
-  static getAll() {
+  static getAll(ownerId) {
+    const queryWithoutOwnerId = 'SELECT * FROM Shehadat as s, Owner as o '
+    + 'WHERE s.ownerId == o.id';
+
+    const queryWithOwnerId = 'SELECT * FROM Shehadat as s, Owner as o '
+    + 'WHERE s.ownerId == o.id '
+    + `AND s.ownerId == ${ownerId}`;
+
+    const finalSqlQuery = ownerId ? queryWithOwnerId : queryWithoutOwnerId;
+
     const promise = new Promise((resolve, reject) => {
       db.transaction((tx) => {
         tx.executeSql(
-          'SELECT * FROM Shehadat',
+          finalSqlQuery,
           null,
           (txObj, { rows: { _array } }) => resolve(_array),
           (txObj, error) => reject(error),

@@ -49,7 +49,7 @@ export default function ShehadaCard({
   }
 
   const interestCollectDates = getPeriods(endDate);
-  const textColor = { color: colorTheme, fontSize: 16 };
+  const textColor = { color: COLORS.primary, fontSize: 16 };
   const formatedTotalMoney = currencyFormat(totalMoney);
 
   return (

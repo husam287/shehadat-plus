@@ -45,8 +45,8 @@ export default function HomeScreen() {
     navigation.navigate('shehadaDetails', { shehadaId: id });
   };
 
-  const getAllShehadat = () => {
-    ShehadatService.getAll()
+  const getAllShehadat = (ownerId) => {
+    ShehadatService.getAll(ownerId)
       .then((res) => {
         setShehadat(res);
       })
@@ -62,10 +62,10 @@ export default function HomeScreen() {
   };
 
   const gerOwners = () => {
+    const allOwnerTag = { name: 'All', id: null };
     OwnerService.getAll()
       .then((res) => {
-        setOwners(res);
-        setSelectedTab(res?.[0]?.id);
+        setOwners([allOwnerTag, ...res]);
       })
       .catch((err) => HandleErrors(err));
   };
@@ -73,9 +73,14 @@ export default function HomeScreen() {
   useFocusEffect(
     useCallback(() => {
       gerOwners();
-      getAllShehadat();
       getTotalMoney();
     }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      getAllShehadat(selectedTab);
+    }, [selectedTab]),
   );
 
   return (
@@ -100,6 +105,7 @@ export default function HomeScreen() {
               endDate={item?.endDate}
               interestPeriod={item?.type}
               interestRatio={item?.interest}
+              colorTheme={item?.color}
               onClick={() => onClickOnShehadaHandler(item?.id)}
             />
           ))}
