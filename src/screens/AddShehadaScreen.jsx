@@ -69,11 +69,11 @@ export default function AddShehadaScreen() {
     const interestYearMonths = Number(res.type) === 1 ? 12 : 4;
     const interestAmountOfMoney = (res.money * (res.interest / 100)) / interestYearMonths;
 
-    const cloneOfStartDate = startDate.clone().add(1, 'months');
+    const cloneOfStartDate = startDate.clone().set('date', endDate.date()).add(Number(res.type), 'months');
 
     const arrayOfInterests = [];
 
-    while (cloneOfStartDate.isBefore(endDate)) {
+    while (cloneOfStartDate.isSameOrBefore(endDate)) {
       arrayOfInterests.push({
         shehadaId: res?.id,
         interestDate: cloneOfStartDate.format('yyyy-MM-DD'),
