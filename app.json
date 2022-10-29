@@ -4,6 +4,7 @@
     "slug": "shehadat-plus",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "shehadatplus",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -19,13 +20,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bit68.hossam",
+      "bundleIdentifier": "com.shehadat.plus",
       "infoPlist": {
         "CFBundleAllowMixedLocalizations": true
       }
     },
     "android": {
-      "package": "com.bit68.hossam",
+      "package": "com.shehadat.plus",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -37,6 +39,11 @@
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "50e2706f-0e53-4fbe-be5f-52474a2946d7"
+      }
     }
   }
 }

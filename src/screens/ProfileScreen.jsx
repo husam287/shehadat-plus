@@ -2,6 +2,8 @@ import React from 'react';
 import {
   Image, ScrollView, StyleSheet, View,
 } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
 
 import ClickableRow from 'components/General/ClickableRow';
 import ScreenWrapper from 'components/General/ScreenWrapper';
@@ -31,16 +33,33 @@ const styles = StyleSheet.create({
   },
 });
 
+WebBrowser.maybeCompleteAuthSession();
+
 function ProfileScreen() {
+  const [, , promptAsync] = Google.useAuthRequest({
+    expoClientId: '546000886518-di658hgds3k96q603iqiuuev67h4rocn.apps.googleusercontent.com',
+    androidClientId: '546000886518-aa9cleto3u0q15fm4d4vuj975tkt2862.apps.googleusercontent.com',
+    scopes: [
+      'https://www.googleapis.com/auth/drive',
+      'https://www.googleapis.com/auth/drive.appfolder',
+    ],
+  });
+
   const navigation = useNavigation();
 
-  const onTakeBackup = () => {
-  // nothing yet
+  const onTakeBackup = async () => {
+    // GeneralDbService.removeDb();
+    const result = await promptAsync();
+    if (result.type === 'success') {
+      GeneralDbService.uploadDbToGoogleDrive(result.authentication.accessToken);
+    }
   };
 
-  const onLoadBackup = () => {
-  // nothing yet
-    GeneralDbService.removeDb();
+  const onLoadBackup = async () => {
+    const result = await promptAsync();
+    if (result.type === 'success') {
+      GeneralDbService.getDbFromGoogleDrive(result.authentication.accessToken);
+    }
   };
 
   const onEditOwners = () => {

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "546000886518",
+    "project_id": "shehadat-plus",
+    "storage_bucket": "shehadat-plus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:546000886518:android:1a02b681ab64b6387b6ad7",
+        "android_client_info": {
+          "package_name": "com.shehadat.plus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "546000886518-en8al2s8j6fsihaep90h8ftrnbgdj1s6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBawZ-79jCezRLZrBLyQen9bbilkBK2GdU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "546000886518-en8al2s8j6fsihaep90h8ftrnbgdj1s6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
