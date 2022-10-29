@@ -6,6 +6,7 @@ import CustomText from 'components/General/CustomText';
 import { AntDesign } from '@expo/vector-icons';
 import globalStyle from 'constants/Styles';
 import COLORS from 'constants/Colors';
+import LoadingComponent from './LoadingComponent';
 
 const styles = StyleSheet.create({
   SettingRowText: {
@@ -39,6 +40,7 @@ export default function ClickableRow({
   arrowColor = COLORS.dark,
   onPress = () => {},
   prefix,
+  isLoading,
 }) {
   const textColorStyle = { color: textColor };
 
@@ -59,7 +61,9 @@ export default function ClickableRow({
               {text}
             </CustomText>
           </View>
-          {rightComponent || <ArrowGoIcon color={arrowColor} />}
+          {isLoading
+            ? <LoadingComponent />
+            : rightComponent || <ArrowGoIcon color={arrowColor} />}
         </View>
       </TouchableOpacity>
       <View style={styles.sepLine} />

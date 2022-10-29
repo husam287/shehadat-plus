@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Image, ScrollView, StyleSheet, View,
 } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
+import { useNavigation } from '@react-navigation/native';
 
 import ClickableRow from 'components/General/ClickableRow';
 import ScreenWrapper from 'components/General/ScreenWrapper';
@@ -11,8 +12,8 @@ import MyPhoto from 'assets/images/profile-image.jpeg';
 import Metrics from 'constants/Metrics';
 import CustomText from 'components/General/CustomText';
 import globalStyle from 'constants/Styles';
-import GeneralDbService from 'services/GeneralDbService';
-import { useNavigation } from '@react-navigation/native';
+import GoogleDriveService from 'services/GoogleDriveService';
+import IMPORTANT_VARS from 'constants/ImportantVars';
 
 const styles = StyleSheet.create({
   centering: {
@@ -37,8 +38,8 @@ WebBrowser.maybeCompleteAuthSession();
 
 function ProfileScreen() {
   const [, , promptAsync] = Google.useAuthRequest({
-    expoClientId: '546000886518-di658hgds3k96q603iqiuuev67h4rocn.apps.googleusercontent.com',
-    androidClientId: '546000886518-aa9cleto3u0q15fm4d4vuj975tkt2862.apps.googleusercontent.com',
+    expoClientId: IMPORTANT_VARS.GOOGLE_EXPO_CLIENT_ID,
+    androidClientId: IMPORTANT_VARS.GOOGLE_ANDROID_CLIENT_ID,
     scopes: [
       'https://www.googleapis.com/auth/drive',
       'https://www.googleapis.com/auth/drive.appfolder',
@@ -47,18 +48,23 @@ function ProfileScreen() {
 
   const navigation = useNavigation();
 
+  const [isTakingBackupLoading, setIsTakingBackupLoading] = useState(false);
   const onTakeBackup = async () => {
-    // GeneralDbService.removeDb();
     const result = await promptAsync();
     if (result.type === 'success') {
-      GeneralDbService.uploadDbToGoogleDrive(result.authentication.accessToken);
+      setIsTakingBackupLoading(true);
+      GoogleDriveService.uploadDbToGoogleDrive(result.authentication.accessToken)
+        .finally(() => { setIsTakingBackupLoading(false); });
     }
   };
 
+  const [isLoadBackupLoading, setIsLoadBackupLoading] = useState(false);
   const onLoadBackup = async () => {
     const result = await promptAsync();
     if (result.type === 'success') {
-      GeneralDbService.getDbFromGoogleDrive(result.authentication.accessToken);
+      setIsLoadBackupLoading(true);
+      GoogleDriveService.getDbFromGoogleDrive(result.authentication.accessToken)
+        .finally(() => { setIsLoadBackupLoading(false); });
     }
   };
 
@@ -78,11 +84,13 @@ function ProfileScreen() {
         <View>
           <ClickableRow
             text="Take a backup"
+            isLoading={isTakingBackupLoading}
             onPress={onTakeBackup}
           />
 
           <ClickableRow
             text="Load a backup"
+            isLoading={isLoadBackupLoading}
             onPress={onLoadBackup}
           />
 
