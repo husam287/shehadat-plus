@@ -9,7 +9,7 @@ function TestScreen() {
   return (
     <ScreenWrapper>
       <View style={globalStyle.row}>
-        <Text>hi</Text>
+        <Text>hiiii</Text>
         <Icon name="user" size={14} color={COLORS.dangerTextColor} />
       </View>
     </ScreenWrapper>
