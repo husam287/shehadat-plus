@@ -43,6 +43,7 @@ function NormalSelectionModal({
   style,
   customInputStyle,
   isLoading,
+  disabled,
 }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const onShowModal = () => {
@@ -86,13 +87,14 @@ function NormalSelectionModal({
     </ReactNativeModal>
   );
 
+  const inputCustomColor = !disabled ? COLORS.primary : COLORS.grey;
   return (
     <View>
-      <TouchableOpacity disabled={isLoading} onPress={onShowModal}>
+      <TouchableOpacity disabled={isLoading || disabled} onPress={onShowModal}>
         <PureInput
           editable={false}
           label={label}
-          customColor={COLORS.primary}
+          customColor={inputCustomColor}
           placeholderText={placeholderText}
           onBlur={onBlur}
           error={error}
@@ -106,7 +108,7 @@ function NormalSelectionModal({
                 <Entypo
                   name="chevron-down"
                   size={18}
-                  color={COLORS.primary}
+                  color={inputCustomColor}
                 />
               )
               : <LoadingComponent />

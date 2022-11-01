@@ -11,9 +11,11 @@ export default class InterestService {
             + 'shehadaId INTEGER NOT NULL, '
             + 'interestDate TEXT NOT NULL, '
             + 'moneyAmount real NOT NULL, '
-            + 'CONSTRAINT fk_Shehada '
+            + 'CONSTRAINT fk_Shehadat '
             + 'FOREIGN KEY (shehadaId) '
-            + 'REFERENCES Shehada(id) '
+            + 'REFERENCES Shehadat(id) '
+            + 'ON DELETE CASCADE '
+            + 'ON UPDATE CASCADE '
             + ')',
           null,
           (txObj, { rows: { _array } }) => resolve(_array),
@@ -140,6 +142,21 @@ export default class InterestService {
         tx.executeSql(
           'DELETE FROM Interest WHERE interestDate <= ?',
           [interestDate],
+          (txObj, { rows: { _array } }) => resolve(_array),
+          (txObj, error) => reject(error),
+        );
+      });
+    });
+
+    return promise;
+  }
+
+  static deleteByShehadaId(shehadaId) {
+    const promise = new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'DELETE FROM Interest WHERE shehadaId == ?',
+          [shehadaId],
           (txObj, { rows: { _array } }) => resolve(_array),
           (txObj, error) => reject(error),
         );

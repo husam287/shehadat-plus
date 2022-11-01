@@ -17,6 +17,8 @@ export default class ShehadatService {
           + 'CONSTRAINT fk_Owner '
           + 'FOREIGN KEY (ownerId) '
           + 'REFERENCES Owner(id) '
+          + 'ON DELETE CASCADE '
+          + 'ON UPDATE CASCADE '
           + ')',
           null,
           (txObj, { rows: { _array } }) => resolve(_array),
@@ -59,7 +61,6 @@ export default class ShehadatService {
     interest,
     startDate,
     endDate,
-    ownerId,
   }) {
     const promise = new Promise((resolve, reject) => {
       db.transaction((tx) => {
@@ -70,10 +71,11 @@ export default class ShehadatService {
           + 'interest = ?, '
           + 'startDate = ?, '
           + 'endDate = ?, ',
-          +'ownerId = ? ',
           +'WHERE id == ?',
-          [money, type, interest, startDate, endDate, ownerId, id],
-          (txObj, { rows: { _array } }) => resolve(_array),
+          [money, type, interest, startDate, endDate, id],
+          () => resolve({
+            id, money, interest, type, startDate, endDate,
+          }),
           (txObj, error) => reject(error),
         );
       });

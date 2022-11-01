@@ -121,8 +121,8 @@ export default function AddShehadaScreen() {
   };
 
   const onEditShehada = (values) => {
-    ShehadatService.editOne({
-      id: shehadaDetails?.id,
+    let newShehadaId;
+    ShehadatService.insertInto({
       money: +values.money,
       interest: +values.profit,
       endDate: values?.endDate,
@@ -130,9 +130,14 @@ export default function AddShehadaScreen() {
       type: values?.type,
       ownerId: values?.owner,
     })
+      .then((res) => {
+        newShehadaId = res?.id;
+        return onAddTheInterests(res);
+      })
+      .then(() => ShehadatService.deleteOne(shehadaDetails?.id))
       .then(() => {
-        showSuccessMsg('Edited successfully!');
-        navigation.goBack();
+        showSuccessMsg('Renewed successfully!');
+        navigation.navigate('shehadaDetails', { shehadaId: newShehadaId });
       })
       .catch((err) => HandleErrors(err));
   };
@@ -256,7 +261,7 @@ export default function AddShehadaScreen() {
 
       <ButtonComponent
         buttonCustomStyle={styles.spacing}
-        title={isEditMode ? 'Edit' : 'Add'}
+        title={isEditMode ? 'Renew' : 'Add'}
         backgroundColor={COLORS.green}
         onPress={isEditMode ? handleSubmit(onEditShehada) : handleSubmit(onAddShehadaHandler)}
       />

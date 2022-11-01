@@ -78,6 +78,9 @@ const styles = StyleSheet.create({
   spaceStart: {
     marginStart: 15,
   },
+  spaceTop20: {
+    marginTop: 20,
+  },
   title: {
     color: COLORS.dark,
     fontSize: 18,
@@ -126,10 +129,6 @@ export default function ShehadaDetails() {
   const shehadaColorCode = numberOfDaysLeft <= 0 ? COLORS.danger : warningCase;
   const daysLeftColorStyle = { color: shehadaColorCode };
 
-  const onEditButtonClicked = () => {
-    navigation.navigate('addShehada', { shehadaDetails });
-  };
-
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const onDeleteButtonClicked = () => {
     setIsAlertVisible(true);
@@ -144,10 +143,14 @@ export default function ShehadaDetails() {
       .catch((err) => HandleErrors(err));
   };
 
+  const renewShehadaHandler = () => {
+    navigation.navigate('addShehada', { shehadaDetails });
+  };
+
   const ownerTextColorStyle = { color: shehadaDetails?.color };
 
   return (
-    <ScreenWrapper>
+    <ScreenWrapper spaceBetween>
       <View style={[styles.cardContainer, shadowStyle()]}>
         <View>
           <Image
@@ -158,12 +161,6 @@ export default function ShehadaDetails() {
           <View style={[globalStyle.row, styles.buttonPosition]}>
             <View style={styles.buttonsContainer}>
               <ButtonComponent
-                IconCompoent={<FontAwesome name="edit" size={20} color={COLORS.dark} />}
-                backgroundColor={COLORS.light}
-                onPress={onEditButtonClicked}
-              />
-              <ButtonComponent
-                buttonCustomStyle={styles.spaceStart}
                 IconCompoent={<AntDesign name="delete" size={20} color={COLORS.danger} />}
                 backgroundColor={COLORS.light}
                 onPress={onDeleteButtonClicked}
@@ -271,6 +268,14 @@ export default function ShehadaDetails() {
             />
           </View>
         </View>
+      </View>
+
+      <View style={styles.spaceTop20}>
+        <ButtonComponent
+          title="Renew this shehada"
+          onPress={renewShehadaHandler}
+          backgroundColor={COLORS.green}
+        />
       </View>
 
       <AlertModal
