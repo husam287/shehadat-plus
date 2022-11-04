@@ -50,7 +50,8 @@ function ProfileScreen() {
 
   const [isTakingBackupLoading, setIsTakingBackupLoading] = useState(false);
   const onTakeBackup = async () => {
-    const result = await promptAsync();
+    const result = await promptAsync({ showInRecents: true, useProxy: false });
+    console.log(result);
     if (result.type === 'success') {
       setIsTakingBackupLoading(true);
       GoogleDriveService.uploadDbToGoogleDrive(result.authentication.accessToken)
