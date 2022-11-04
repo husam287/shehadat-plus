@@ -192,7 +192,7 @@ export default function AddShehadaScreen() {
                 onChange={onChange}
                 onBlur={onBlur}
                 error={fieldState.error?.message}
-                data={[{ label: '1 Month', value: 1 }, { label: '3 Months', value: 3 }]}
+                data={[{ label: '1 Month', value: 1 }, { label: '3 Months', value: 3 }, { label: 'Year', value: 12 }]}
                 placeholderText="Type"
               />
             )}

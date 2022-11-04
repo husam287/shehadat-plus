@@ -42,7 +42,7 @@ export default function ShehadaCard({
   function getPeriods() {
     const periods = [];
     const endDateDay = moment(endDate).date();
-    for (let index = 1; index <= 12; index += 1) {
+    for (let index = 1; index <= 12; index += Number(interestPeriod)) {
       periods.push(`${endDateDay}/${index}`);
     }
     return periods;

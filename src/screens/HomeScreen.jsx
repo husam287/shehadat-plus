@@ -48,7 +48,6 @@ export default function HomeScreen() {
   const getAllShehadat = (ownerId) => {
     ShehadatService.getAll(ownerId)
       .then((res) => {
-        console.log(res);
         setShehadat(res);
       })
       .catch((err) => HandleErrors(err));
