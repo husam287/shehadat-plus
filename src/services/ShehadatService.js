@@ -86,11 +86,11 @@ export default class ShehadatService {
 
   static getAll(ownerId) {
     const queryWithoutOwnerId = 'SELECT s.*, o.color, o.name FROM Shehadat as s, Owner as o '
-    + 'WHERE s.ownerId == o.id';
+      + 'WHERE s.ownerId == o.id';
 
     const queryWithOwnerId = 'SELECT s.*, o.color, o.name FROM Shehadat as s, Owner as o '
-    + 'WHERE s.ownerId == o.id '
-    + `AND s.ownerId == ${ownerId}`;
+      + 'WHERE s.ownerId == o.id '
+      + `AND s.ownerId == ${ownerId}`;
 
     const finalSqlQuery = ownerId ? queryWithOwnerId : queryWithoutOwnerId;
 
@@ -138,11 +138,15 @@ export default class ShehadatService {
     return promise;
   }
 
-  static getTotalMoneyAmount() {
+  static getTotalMoneyAmount(ownerId) {
+    const queryWithoutOwnerId = 'SELECT SUM(totalMoney) as summationOfMoney FROM Shehadat';
+    const queryWithOwnerId = `SELECT SUM(totalMoney) as summationOfMoney FROM Shehadat WHERE ownerId == ${ownerId}`;
+    const finalQuery = ownerId ? queryWithOwnerId : queryWithoutOwnerId;
+
     const promise = new Promise((resolve, reject) => {
       db.transaction((tx) => {
         tx.executeSql(
-          'SELECT SUM(totalMoney) as summationOfMoney FROM Shehadat',
+          finalQuery,
           null,
           (txObj, { rows: { _array } }) => resolve(_array?.[0]),
           (txObj, error) => reject(error),

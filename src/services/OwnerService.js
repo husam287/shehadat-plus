@@ -6,11 +6,11 @@ export default class OwnerService {
       db.transaction((tx) => {
         tx.executeSql(
           'CREATE TABLE IF NOT EXISTS Owner '
-            + '('
-            + 'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-            + 'name VARCHAR(255) NOT NULL,'
-            + 'color CHARACTER(9) NOT NULL'
-            + ')',
+          + '('
+          + 'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+          + 'name VARCHAR(255) NOT NULL,'
+          + 'color CHARACTER(9) NOT NULL'
+          + ')',
           null,
           (txObj, { rows: { _array } }) => resolve(_array),
           (txObj, error) => reject(error),
@@ -55,12 +55,12 @@ export default class OwnerService {
     const promise = new Promise((resolve, reject) => {
       db.transaction((tx) => {
         tx.executeSql(
-          'UPDATE Owner '
+          'UPDATE Owner as o '
           + 'SET name = ?, '
-          + 'color = ? ',
-          +'WHERE id == ?',
+          + 'color = ? '
+          + 'WHERE o.id == ?',
           [name, color, id],
-          (txObj, { rows: { _array } }) => resolve(_array),
+          () => resolve({ name, color, id }),
           (txObj, error) => reject(error),
         );
       });

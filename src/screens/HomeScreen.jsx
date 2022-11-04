@@ -53,8 +53,8 @@ export default function HomeScreen() {
       .catch((err) => HandleErrors(err));
   };
 
-  const getTotalMoney = () => {
-    ShehadatService.getTotalMoneyAmount()
+  const getTotalMoney = (ownerId) => {
+    ShehadatService.getTotalMoneyAmount(ownerId)
       .then((res) => {
         setTotalMoney(res?.summationOfMoney);
       })
@@ -73,12 +73,12 @@ export default function HomeScreen() {
   useFocusEffect(
     useCallback(() => {
       gerOwners();
-      getTotalMoney();
     }, []),
   );
 
   useFocusEffect(
     useCallback(() => {
+      getTotalMoney(selectedTab);
       getAllShehadat(selectedTab);
     }, [selectedTab]),
   );

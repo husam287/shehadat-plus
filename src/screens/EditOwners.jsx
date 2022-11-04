@@ -25,6 +25,9 @@ export default function EditOwners() {
   }, []);
 
   const [isNewControlModalVisible, setIsNewControlModalVisible] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedOwner, setSelectedOwner] = useState(null);
+
   const showOwnersControlModal = () => {
     setIsNewControlModalVisible(true);
   };
@@ -34,7 +37,9 @@ export default function EditOwners() {
   };
 
   const onEditOwnerhandler = (id) => {
-    console.log(id);
+    setEditMode(true);
+    setSelectedOwner(owners?.find((item) => item.id === id));
+    setIsNewControlModalVisible(true);
   };
 
   return (
@@ -63,6 +68,9 @@ export default function EditOwners() {
       <OwnerNewEditModal
         isModalVisible={isNewControlModalVisible}
         setIsModalVisible={setIsNewControlModalVisible}
+        editMode={editMode}
+        selectedOwner={selectedOwner}
+        setEditMode={setEditMode}
         onSubmitListner={() => getOwners()}
       />
     </ScreenWrapper>

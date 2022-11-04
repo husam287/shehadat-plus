@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as YUP from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ReactNativeModal from 'react-native-modal';
@@ -24,25 +24,49 @@ export default function OwnerNewEditModal({
   isModalVisible,
   setIsModalVisible,
   onSubmitListner = () => {},
+  editMode,
+  setEditMode,
+  selectedOwner,
 }) {
   const schema = YUP.object().shape({
     name: YUP.string().required(),
     color: YUP.string().required(),
   });
 
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, reset } = useForm({
     resolver: yupResolver(schema),
   });
 
+  useEffect(() => {
+    if (!isModalVisible) return;
+    if (editMode) {
+      reset({
+        name: selectedOwner?.name,
+        color: selectedOwner?.color,
+      });
+    } else {
+      reset({ name: '', color: '' });
+    }
+  }, [isModalVisible, editMode, selectedOwner, reset]);
+
   const onDismissModal = () => {
     setIsModalVisible(false);
+    setEditMode(false);
   };
 
   const onSubmit = (values) => {
-    OwnerService.insertOne({
-      name: values?.name,
-      color: values?.color,
-    })
+    const request = editMode
+      ? OwnerService.editOne({
+        id: selectedOwner?.id,
+        name: values?.name,
+        color: values?.color,
+      })
+      : OwnerService.insertOne({
+        name: values?.name,
+        color: values?.color,
+      });
+
+    request
       .then(() => {
         onSubmitListner(true);
         onDismissModal();
