@@ -8,6 +8,7 @@ import Badge from 'components/General/Badge';
 import COLORS from 'constants/Colors';
 import globalStyle from 'constants/Styles';
 import currencyFormat from 'utils/currencyFormat';
+import getTodayDate from 'utils/getTodayDate';
 
 const styles = StyleSheet.create({
   badgeContainer: {
@@ -52,8 +53,14 @@ export default function ShehadaCard({
   const textColor = { color: COLORS.primary, fontSize: 16 };
   const formatedTotalMoney = currencyFormat(totalMoney);
 
+  const numberOfDaysLeft = moment(endDate).diff(moment(getTodayDate()), 'days');
+
+  const warningCase = numberOfDaysLeft <= 7 ? COLORS.warning : COLORS.light;
+  const shehadaColorCode = numberOfDaysLeft <= 0 ? COLORS.danger : warningCase;
+  const daysLeftColorStyle = { backgroundColor: shehadaColorCode };
+
   return (
-    <TouchableOpacity onPress={onClick} style={styles.shehadatBorder}>
+    <TouchableOpacity onPress={onClick} style={[styles.shehadatBorder, daysLeftColorStyle]}>
       <View style={globalStyle.fullSize}>
         <View style={[globalStyle.row, styles.spaceBetween]}>
           <CustomText style={[textColor, globalStyle.font500]}>
