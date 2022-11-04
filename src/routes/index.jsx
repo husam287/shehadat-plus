@@ -21,6 +21,7 @@ function Route() {
   useCheckNewUpdates();
 
   const initiallizeLang = async () => {
+    I18nManager.allowRTL(false);
     I18nManager.forceRTL(false);
   };
 
