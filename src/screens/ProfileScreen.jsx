@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Image, ScrollView, StyleSheet, View,
 } from 'react-native';
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 WebBrowser.maybeCompleteAuthSession();
 
 function ProfileScreen() {
-  const [, , promptAsync] = Google.useAuthRequest({
+  const [, fullResult, promptAsync] = Google.useAuthRequest({
     expoClientId: IMPORTANT_VARS.GOOGLE_EXPO_CLIENT_ID,
     androidClientId: IMPORTANT_VARS.GOOGLE_ANDROID_CLIENT_ID,
     scopes: [
@@ -49,29 +49,45 @@ function ProfileScreen() {
   const navigation = useNavigation();
 
   const [isTakingBackupLoading, setIsTakingBackupLoading] = useState(false);
-  const onTakeBackup = async () => {
-    const result = await promptAsync({ showInRecents: true, useProxy: false });
-    console.log(result);
-    if (result.type === 'success') {
-      setIsTakingBackupLoading(true);
-      GoogleDriveService.uploadDbToGoogleDrive(result.authentication.accessToken)
-        .finally(() => { setIsTakingBackupLoading(false); });
-    }
+  const [isClickedOnTakeBackup, setisClickedOnTakeBackup] = useState(false);
+  const onTakeBackup = () => {
+    setisClickedOnTakeBackup(true);
+    promptAsync();
   };
 
   const [isLoadBackupLoading, setIsLoadBackupLoading] = useState(false);
-  const onLoadBackup = async () => {
-    const result = await promptAsync();
-    if (result.type === 'success') {
-      setIsLoadBackupLoading(true);
-      GoogleDriveService.getDbFromGoogleDrive(result.authentication.accessToken)
-        .finally(() => { setIsLoadBackupLoading(false); });
-    }
+  const [isClickedOnLoadBackup, setisClickedOnLoadBackup] = useState(false);
+  const onLoadBackup = () => {
+    setisClickedOnLoadBackup(true);
+    promptAsync();
   };
 
   const onEditOwners = () => {
     navigation.navigate('editOwners');
   };
+
+  useEffect(() => {
+    if (!fullResult) return;
+
+    if (fullResult.type === 'success' && isClickedOnTakeBackup) {
+      setIsTakingBackupLoading(true);
+      GoogleDriveService.uploadDbToGoogleDrive(fullResult.authentication.accessToken)
+        .finally(() => {
+          setIsTakingBackupLoading(false);
+          setisClickedOnTakeBackup(false);
+        });
+    }
+
+    if (fullResult.type === 'success' && isClickedOnLoadBackup) {
+      setIsLoadBackupLoading(true);
+      GoogleDriveService.getDbFromGoogleDrive(fullResult.authentication.accessToken)
+        .finally(() => {
+          setIsLoadBackupLoading(false);
+          setisClickedOnLoadBackup(false);
+        });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fullResult]);
 
   return (
     <ScreenWrapper>

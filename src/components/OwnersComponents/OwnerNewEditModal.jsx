@@ -25,7 +25,7 @@ export default function OwnerNewEditModal({
   setIsModalVisible,
   onSubmitListner = () => {},
   editMode,
-  setEditMode,
+  setEditMode = () => {},
   selectedOwner,
 }) {
   const schema = YUP.object().shape({
