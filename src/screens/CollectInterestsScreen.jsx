@@ -12,6 +12,8 @@ import ShehadaRow from 'components/CollectMoneyComponents/ShehadaRow';
 import ButtonComponent from 'components/General/ButtonComponent';
 import globalStyle from 'constants/Styles';
 import showSuccessMsg from 'hooks/showSuccessMsg';
+import CustomText from 'components/General/CustomText';
+import currencyFormat from 'utils/currencyFormat';
 
 const styles = StyleSheet.create({
   badgeContainer: {
@@ -24,6 +26,12 @@ const styles = StyleSheet.create({
   },
   semiFullSpace: {
     width: '48%',
+  },
+  totalText: {
+    color: COLORS.dark,
+    fontSize: 18,
+    textAlign: 'center',
+    ...globalStyle.font600,
   },
 });
 
@@ -66,6 +74,12 @@ export default function CollectInterestsScreen() {
       })
       .catch((err) => HandleErrors(err));
   };
+
+  const totalInterestMoney = interests?.reduce(
+    (partialSum, a) => +partialSum + a.moneySummation,
+    0,
+  );
+
   return (
     <ScreenWrapper>
       <FlatList
@@ -90,22 +104,27 @@ export default function CollectInterestsScreen() {
         )}
       />
 
-      <View style={styles.btnsContainer}>
-        <View style={styles.semiFullSpace}>
-          <ButtonComponent
-            title="Collect All Previous"
-            backgroundColor={COLORS.primary}
-            onPress={onCollectAllPreviousDays}
-          />
-        </View>
-        <View style={styles.semiFullSpace}>
-          <ButtonComponent
-            backgroundColor="transparent"
-            color={COLORS.primary}
-            borderColor={COLORS.primary}
-            title="Collect Day"
-            onPress={onCollectThisDayOnly}
-          />
+      <View>
+        <CustomText style={styles.totalText}>
+          {`Total: ${currencyFormat(totalInterestMoney)}`}
+        </CustomText>
+        <View style={styles.btnsContainer}>
+          <View style={styles.semiFullSpace}>
+            <ButtonComponent
+              title="Collect All Previous"
+              backgroundColor={COLORS.primary}
+              onPress={onCollectAllPreviousDays}
+            />
+          </View>
+          <View style={styles.semiFullSpace}>
+            <ButtonComponent
+              backgroundColor="transparent"
+              color={COLORS.primary}
+              borderColor={COLORS.primary}
+              title="Collect Day"
+              onPress={onCollectThisDayOnly}
+            />
+          </View>
         </View>
       </View>
     </ScreenWrapper>

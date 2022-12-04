@@ -7,6 +7,7 @@ import CustomText from 'components/General/CustomText';
 import { useNavigation } from '@react-navigation/native';
 import globalStyle from 'constants/Styles';
 import { Ionicons } from '@expo/vector-icons';
+import currencyFormat from 'utils/currencyFormat';
 
 const styles = StyleSheet.create({
   container: {
@@ -49,7 +50,7 @@ export default function ShehadaRow({
     <TouchableOpacity onPress={goToShehada}>
       <View style={[globalStyle.row, styles.mainContainer]}>
         <View style={styles.container}>
-          <CustomText style={styles.textStyle}>{shehadaMoney}</CustomText>
+          <CustomText style={styles.textStyle}>{currencyFormat(shehadaMoney)}</CustomText>
           <CustomText style={styles.textStyle}>{owner}</CustomText>
           <CustomText style={styles.greenTextStyle}>{`+${profit}`}</CustomText>
         </View>
