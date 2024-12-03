@@ -9,10 +9,10 @@
     },
     "preview": {
       "distribution": "internal",
-      "releaseChannel": "testingv1"
+      "channel": "production"
     },
     "production": {
-      "releaseChannel": "prodv1"
+      "channel": "prodv1"
     }
   },
   "submit": {

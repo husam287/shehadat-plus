@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "checkAutomatically": "ON_ERROR_RECOVERY"
+      "checkAutomatically": "ON_ERROR_RECOVERY",
+      "url": "https://u.expo.dev/50e2706f-0e53-4fbe-be5f-52474a2946d7"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -44,6 +45,9 @@
       "eas": {
         "projectId": "50e2706f-0e53-4fbe-be5f-52474a2946d7"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }

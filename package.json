@@ -24,7 +24,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "eslint --fix ./src/**/*.{js,jsx}",
-    "deploy-test": "expo publish --release-channel testingv1",
+    "deploy-test": "npx expo publish --release-channel testingv1",
     "deploy-live": "expo publish --release-channel prodv1"
   },
   "husky": {
