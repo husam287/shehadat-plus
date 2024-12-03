@@ -1,10 +1,11 @@
-import {
-  Image, StyleSheet, View,
-} from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import React, { useCallback, useState } from 'react';
 import moment from 'moment';
 import {
-  FontAwesome, MaterialCommunityIcons, FontAwesome5, AntDesign,
+  FontAwesome,
+  MaterialCommunityIcons,
+  FontAwesome5,
+  AntDesign,
 } from '@expo/vector-icons';
 import FloosImage from 'assets/images/floos.jpg';
 import ScreenWrapper from 'components/General/ScreenWrapper';
@@ -13,7 +14,11 @@ import CustomText from 'components/General/CustomText';
 import COLORS from 'constants/Colors';
 import globalStyle from 'constants/Styles';
 import currencyFormat from 'utils/currencyFormat';
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import ShehadatService from 'services/ShehadatService';
 import HandleErrors from 'hooks/handleErrors';
 import getTodayDate from 'utils/getTodayDate';
@@ -67,9 +72,6 @@ const styles = StyleSheet.create({
   innerContainer: {
     padding: 10,
   },
-  justifyAround: {
-    justifyContent: 'space-around',
-  },
   secondaryText: {
     color: COLORS.secondary,
     fontSize: 12,
@@ -92,9 +94,7 @@ function InfoRow({ icon, infoBlock }) {
   return (
     <View style={[globalStyle.row, styles.infoBox]}>
       {icon}
-      <View style={[styles.spaceStart, globalStyle.fullSize]}>
-        {infoBlock}
-      </View>
+      <View style={[styles.spaceStart, globalStyle.fullSize]}>{infoBlock}</View>
     </View>
   );
 }
@@ -105,25 +105,31 @@ export default function ShehadaDetails() {
 
   const shehadaId = useRoute()?.params?.shehadaId;
   const [shehadaDetails, setShehadaDetails] = useState(null);
-  useFocusEffect(useCallback(() => {
-    if (!shehadaId) return;
+  useFocusEffect(
+    useCallback(() => {
+      if (!shehadaId) return;
 
-    ShehadatService.getOne(shehadaId)
-      .then((res) => {
-        setShehadaDetails(res);
-      })
-      .catch((err) => HandleErrors(err));
-  }, [shehadaId]));
+      ShehadatService.getOne(shehadaId)
+        .then((res) => {
+          setShehadaDetails(res);
+        })
+        .catch((err) => HandleErrors(err));
+    }, [shehadaId]),
+  );
 
-  const interestInPercentage = shehadaDetails && (shehadaDetails.interest / 100);
+  console.log(shehadaDetails);
 
-  const interestMoneyPerMonth = shehadaDetails
-  && ((shehadaDetails.totalMoney * interestInPercentage) / 12);
+  const interestInPercentage = shehadaDetails && shehadaDetails.interest / 100;
 
-  const interestMoneyPerQuarterYear = shehadaDetails
-  && ((shehadaDetails.totalMoney * interestInPercentage) / 4);
+  const interestMoney = shehadaDetails
+    && shehadaDetails.totalMoney
+      * interestInPercentage
+      * (shehadaDetails.type / 12);
 
-  const numberOfDaysLeft = moment(shehadaDetails?.endDate).diff(moment(getTodayDate()), 'days');
+  const numberOfDaysLeft = moment(shehadaDetails?.endDate).diff(
+    moment(getTodayDate()),
+    'days',
+  );
 
   const warningCase = numberOfDaysLeft <= 30 ? COLORS.warning : COLORS.green;
   const shehadaColorCode = numberOfDaysLeft <= 0 ? COLORS.danger : warningCase;
@@ -153,15 +159,14 @@ export default function ShehadaDetails() {
     <ScreenWrapper spaceBetween>
       <View style={[styles.cardContainer, shadowStyle()]}>
         <View>
-          <Image
-            source={FloosImage}
-            style={styles.imageStyle}
-          />
+          <Image source={FloosImage} style={styles.imageStyle} />
 
           <View style={[globalStyle.row, styles.buttonPosition]}>
             <View style={styles.buttonsContainer}>
               <ButtonComponent
-                IconCompoent={<AntDesign name="delete" size={20} color={COLORS.danger} />}
+                IconCompoent={
+                  <AntDesign name="delete" size={20} color={COLORS.danger} />
+                }
                 backgroundColor={COLORS.light}
                 onPress={onDeleteButtonClicked}
               />
@@ -191,7 +196,7 @@ export default function ShehadaDetails() {
                 <CustomText style={[styles.infoText, styles.greenColorText]}>
                   {moment(shehadaDetails?.startDate).format('DD/MM/yyyy')}
                 </CustomText>
-                )}
+              )}
             />
 
             {/* END DATE */}
@@ -207,7 +212,7 @@ export default function ShehadaDetails() {
                 <CustomText style={[styles.infoText, styles.dangerColorText]}>
                   {moment(shehadaDetails?.endDate).format('DD/MM/yyyy')}
                 </CustomText>
-                )}
+              )}
             />
 
             {/* INTEREST RATE */}
@@ -223,48 +228,61 @@ export default function ShehadaDetails() {
                 <CustomText style={[styles.infoText, styles.darkColorText]}>
                   {`${shehadaDetails?.interest} %`}
                 </CustomText>
-                )}
+              )}
             />
 
             {/* OWNER */}
             <InfoRow
               icon={(
-                <FontAwesome5 name="user-tie" size={21} color={shehadaDetails?.color} />
+                <FontAwesome5
+                  name="user-tie"
+                  size={21}
+                  color={shehadaDetails?.color}
+                />
               )}
               infoBlock={(
-                <CustomText style={[styles.infoText, styles.darkColorText, ownerTextColorStyle]}>
+                <CustomText
+                  style={[
+                    styles.infoText,
+                    styles.darkColorText,
+                    ownerTextColorStyle,
+                  ]}
+                >
                   {shehadaDetails?.name}
                 </CustomText>
-                )}
+              )}
             />
 
             {/* INTEREST MONEY */}
             <InfoRow
               icon={(
-                <MaterialCommunityIcons name="hand-coin-outline" size={24} color={COLORS.dark} />
+                <MaterialCommunityIcons
+                  name="hand-coin-outline"
+                  size={24}
+                  color={COLORS.dark}
+                />
               )}
               infoBlock={(
-                <View style={[globalStyle.row, styles.justifyAround]}>
+                <View style={globalStyle.row}>
                   <CustomText style={[styles.infoText, styles.darkColorText]}>
-                    {`${currencyFormat(interestMoneyPerMonth)}/ ${'1'} month`}
-                  </CustomText>
-                  <CustomText style={[styles.infoText, styles.darkColorText]}>
-                    {`${currencyFormat(interestMoneyPerQuarterYear)}/ ${'3'} month`}
+                    {`${currencyFormat(interestMoney)}/ ${
+                      shehadaDetails?.type
+                    } month`}
                   </CustomText>
                 </View>
-                )}
+              )}
             />
 
             {/* DAYS LEFT BEFORE EXPIRE */}
             <InfoRow
-              icon={(
+              icon={
                 <AntDesign name="calendar" size={24} color={shehadaColorCode} />
-              )}
+              }
               infoBlock={(
                 <CustomText style={[styles.infoText, daysLeftColorStyle]}>
                   {`${numberOfDaysLeft} Days Left`}
                 </CustomText>
-                )}
+              )}
             />
           </View>
         </View>

@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 export default function CustomText({ style, children, ...otherProps }) {
   const customStyles = style?.lenght ? [...style] : style;
   return (
-    <Text {...otherProps} style={[styles.textStyle, customStyles]}>
+    <Text {...otherProps} style={[styles.textStyle, customStyles]} allowFontScaling={false}>
       {children}
     </Text>
   );
