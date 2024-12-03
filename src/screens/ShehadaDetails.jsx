@@ -117,8 +117,6 @@ export default function ShehadaDetails() {
     }, [shehadaId]),
   );
 
-  console.log(shehadaDetails);
-
   const interestInPercentage = shehadaDetails && shehadaDetails.interest / 100;
 
   const interestMoney = shehadaDetails
