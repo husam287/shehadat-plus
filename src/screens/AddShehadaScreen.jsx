@@ -53,11 +53,9 @@ export default function AddShehadaScreen() {
     type: YUP.string().required(),
     owner: YUP.string().required(),
     startDate: YUP.string().required(),
-    endDate: YUP.string().required().test(
-      'date valid',
-      'End date must be after start date',
-      (value) => moment(YUP.ref('startDate')).isBefore(value),
-    ),
+    endDate: YUP.string()
+      .required()
+      .test('date valid', 'End date must be after start date', (value) => moment(YUP.ref('startDate')).isBefore(value)),
   });
   const navigation = useNavigation();
 
@@ -84,10 +82,12 @@ export default function AddShehadaScreen() {
     const startDate = moment(res.startDate);
     const endDate = moment(res.endDate);
 
-    const interestYearMonths = Number(res.type) === 1 ? 12 : 4;
-    const interestAmountOfMoney = (res.money * (res.interest / 100)) / interestYearMonths;
+    const interestAmountOfMoney = res.money * (res.interest / 100) * (Number(res.type) / 12);
 
-    const cloneOfStartDate = startDate.clone().set('date', endDate.date()).add(Number(res.type), 'months');
+    const cloneOfStartDate = startDate
+      .clone()
+      .set('date', endDate.date())
+      .add(Number(res.type), 'months');
 
     const arrayOfInterests = [];
 
@@ -146,7 +146,9 @@ export default function AddShehadaScreen() {
   useEffect(() => {
     OwnerService.getAll()
       .then((res) => {
-        setOwners(res?.map((item) => ({ ...item, label: item?.name, value: item?.id })));
+        setOwners(
+          res?.map((item) => ({ ...item, label: item?.name, value: item?.id })),
+        );
       })
       .catch((err) => HandleErrors(err));
   }, []);
@@ -155,7 +157,10 @@ export default function AddShehadaScreen() {
     const startDateValue = getValues('startDate');
     if (!startDateValue) return;
 
-    const endDateValue = moment(startDateValue).clone().add(1, 'days').add(numberOfYears, 'years');
+    const endDateValue = moment(startDateValue)
+      .clone()
+      .add(1, 'days')
+      .add(numberOfYears, 'years');
     setValue('endDate', endDateValue.format('yyyy-MM-DD'));
   };
 
@@ -192,7 +197,11 @@ export default function AddShehadaScreen() {
                 onChange={onChange}
                 onBlur={onBlur}
                 error={fieldState.error?.message}
-                data={[{ label: '1 Month', value: 1 }, { label: '3 Months', value: 3 }, { label: 'Year', value: 12 }]}
+                data={[
+                  { label: '1 Month', value: 1 },
+                  { label: '3 Months', value: 3 },
+                  { label: 'Year', value: 12 },
+                ]}
                 placeholderText="Type"
               />
             )}
@@ -263,7 +272,11 @@ export default function AddShehadaScreen() {
         buttonCustomStyle={styles.spacing}
         title={isEditMode ? 'Renew' : 'Add'}
         backgroundColor={COLORS.green}
-        onPress={isEditMode ? handleSubmit(onEditShehada) : handleSubmit(onAddShehadaHandler)}
+        onPress={
+          isEditMode
+            ? handleSubmit(onEditShehada)
+            : handleSubmit(onAddShehadaHandler)
+        }
       />
     </ScreenWrapper>
   );
